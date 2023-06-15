@@ -1,7 +1,55 @@
+
+html,
+body {
+	 width:  100%;
+  height: 100%;
+  margin: 0;
+}
+
+canvas {
+  display: block;
+}
+
+/*div {
+  position: absolute;
+
+ 
+}*/
+/*div:nth-of-type(2) {
+
+  background-color: lightgreen;
+}
+*/
+
 .bubble{
-	background-color: red;
+	position: absolute;
+	width: 100px;
+  height: 100px;
+  border-radius: 50%;
+	background-color: #FFFACD;
+	box-shadow: 0.2em 0.2em 0 0 rgba(15, 28, 63, 0.125);
+  z-index:1
+  pointer-events: disabled;
+}
+
+.textParent{
+    width: 100px;
+  height: 50px;
+  pointer-events: none;
+position: relative;
+top: 35%;
 }
 
 .canvas {
   border: 1px solid black;
+}
+
+.textIntoTheCircle{
+
+  font-size: 1.1rem;
+ text-align: center;
+  color: #008080;
+  font-family: Helvetica, Arial, sans-serif;
+
+
 }

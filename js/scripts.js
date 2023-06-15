@@ -1,37 +1,13 @@
 const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-let elementslist = []
-// letdata = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m18.707 12.707-3 3a1 1 0 0 1-1.414-1.414L15.586 13H6a1 1 0 0 1 0-2h9.586l-1.293-1.293a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414z" style="fill:#f97c4b" data-name="Right"/></svg>
+const context = canvas.getContext('2d');
+let width = canvas.width = innerWidth
+let height = canvas.height = innerHeight
 
-
-canvas.addEventListener('click', function (e) {
-
-
-  let x = e.pageX - canvas.offsetLeft;
-  let y = e.pageY - canvas.offsetTop;
-
-  elementslist.forEach(function (element) {
-    // let circleId = element.id
-    let circleText = element.circleText
-    console.log(element)
-    if (Math.pow(x - element.x, 2) + Math.pow(y - element.y, 2) < Math.pow(element.circleSize, 2)) {
-      element.clicked(circleText);
-    }
-  });
-
-});
-
-
-function draw() {
-  renderingCircles()
-  renderingLines()
-
-  // renderingCircleS()
-  // console.log(listEdges())
-  // console.log(itemsNodesID)
-
-}
-
+const size = 100
+let current = null
+const NodesID = listNodes()
+const num = NodesID.length
+const elements={}
 
 function graphModel() {
 
@@ -59,6 +35,45 @@ function graphModel() {
   }
   return elements
 }
+
+
+
+function draw() {
+
+for (let items = 0; items < num; items++) {
+  textIntoTheCircle = NodesID[items]['data']['label']
+  positionX = NodesID[items]['position']['x']
+    positionY = NodesID[items]['position']['y']
+  // создание dom-элемента
+
+  const element = document.createElement('div')
+  
+
+  // const textNode = document.createElement('p');
+  element.addEventListener('mousedown', onMouseDown)
+  const id = 'el' + items
+  element.id = id
+  element.className = "bubble";
+  element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p></div>`;
+  document.body.prepend(element)
+  // document.body.prepend(textNode)
+
+// console.log(element)
+  // тут будут храниться и изменяться все его координаты
+  elements[id] = {
+    x: positionX,
+    y: positionY,
+    startX: 0,
+    startY: 0
+  }
+console.log(textIntoTheCircle)
+  // начальное положение
+  translate(element, elements[id].x, elements[id].y)
+}
+// соединяем линиями
+connect(elements)
+}
+
 function listNodes() {
   let itemsNodesID = []
   const nodesValues = graphModel()['nodes']
@@ -68,90 +83,83 @@ function listNodes() {
     });
   }
   listingNodes()
-  console.log(itemsNodesID)
+  // console.log(itemsNodesID)
   return itemsNodesID
 }
 
-function listEdges() {
-  let itemsEddgesID = []
-  const nodesValues = graphModel()['edges']
-  const listingEdges = () => {
-    nodesValues.forEach(function (item, index, arr) {
-      itemsEddgesID.push(item)
-    });
+
+
+/*------------------------------------*/
+
+function onMouseDown(e) {
+  e.preventDefault()
+
+  // координаты нажатия мыши внутри элемента
+  elements[e.target.id].startX = e.x - elements[e.target.id].x
+  elements[e.target.id].startY = e.y - elements[e.target.id].y
+console.log(e.target)
+  current = e.target
+
+  document.body.addEventListener('mousemove', onMouseMove)
+  document.body.addEventListener('mouseup', onMouseUp)
+}
+
+function onMouseMove(e) {
+  const x = elements[current.id].x = e.x - elements[current.id].startX
+  const y = elements[current.id].y = e.y - elements[current.id].startY
+
+  translate(current, x, y)
+  connect(elements)
+}
+
+function onMouseUp() {
+  document.body.removeEventListener('mousemove', onMouseMove)
+  document.body.removeEventListener('mouseup', onMouseUp)
+}
+
+/*------------------------------------*/
+
+function translate(el, x, y) {
+  el.style.transform = `translate(${x}px, ${y}px)`
+}
+
+function connect(elements) {
+  context.clearRect(0, 0, width, height)
+
+  for (let i = 0; i < num - 1; i++) {
+    drawLine(
+      elements['el' + i].x,
+      elements['el' + (i + 1)].x,
+      elements['el' + i].y,
+      elements['el' + (i + 1)].y
+    )
   }
-  listingEdges()
-  console.log(itemsEddgesID)
-  return itemsEddgesID
 }
 
-function writeMessage(text, posx, posy) {
-  ctx.font = '18pt Calibri';
-  ctx.fillStyle = 'black';
-  ctx.textAlign = 'center';
-  ctx.fillText(text, positionX, positionY);
-};
-
-function renderCircle(x, y) {
-  ctx.beginPath();
-  ctx.arc(x, y, 50, 0, Math.PI * 2, true);
-  ctx.fillStyle = '#FFFF99';
-  ctx.fill();
-  ctx.closePath();
+function drawLine(x1, x2, y1, y2) {
+  context.beginPath()
+  // из центра квадрата
+  context.moveTo(x1 + size / 2, y1 + (size-120) / 2)
+  // в центр другого квадрата
+  context.lineTo(x2 + size / 2, y2 + (size-120) / 2)
+  context.lineWidth = 4;
+  context.strokeStyle = "rgba(166, 196, 255, 1)"
+  context.stroke()
 }
 
-function renderLine(posXstart, posYstart, posXend, posYend) {
-  ctx.beginPath();
-  ctx.moveTo(posXstart, posYstart);
-  ctx.lineTo(posXend, posYend);
-  ctx.stroke();
-}
+// function writeMessage(text, posx, posy) {
+//   context.font = '18pt Calibri';
+//   context.fillStyle = 'red';
+//   // context.textAlign = 'center';
+//   context.fillText(text, posx + size / 2, posy+ (size-120) / 2);
+//   console.log(context.fillText)
+// };
+/*------------------------------------*/
 
-function renderingCircles() {
-  const NodesID = listNodes()
-  console.log()
-  for (let items = 0; items <= NodesID.length - 1; items++) {
-    // const circle = new Path2D(items);
-    positionX = NodesID[items]['position']['x']
-    positionY = NodesID[items]['position']['y']
-    textIntoTheCircle = NodesID[items]['data']['label']
-    circleId = NodesID[items]['data']['id']
-    renderCircle(positionX, positionY)
-    writeMessage(textIntoTheCircle, positionX, positionY)
-    // elementslist.push(circle)
-    elementslist.push({
-      id: circleId,
-      circleText: textIntoTheCircle,
-      color: '#05EFFF',
-      circleSize: 50,
-      x: positionX,
-      y: positionY,
-      clicked: function (label) {
-        // alert(`Вы выбрали ${label} для обучения`)
-        console.log(`Вы выбрали ${label} для обучения`)
-      }
-    });
-  }
-  // console.log(elementslist)
-}
-
-function renderingLines() {
-  const NodesID = listNodes()
-  const EdgeID = listEdges()
-  // console.log('sa')
-
-
-  for (let items = 0; items <= EdgeID.length - 1; items++) {
-    positionXstart = NodesID[items]['position']['x']
-    positionYstart = NodesID[items]['position']['y']
-    positionXend = NodesID[(items + 1)]['position']['x']
-    positionYend = NodesID[(items + 1)]['position']['y']
-    // console.log(positionXstart,positionYstart,positionXend,positionYend)
-    // console.log(EdgeID[items])
-    renderLine(positionXstart, positionYstart, positionXend, positionYend)
-    // arrow(positionXstart, positionYstart, positionXend, positionYend)
-  }
-
+onresize = () => {
+  width = canvas.width = innerWidth
+  height = canvas.height = innerHeight
+  connect(elements)
 }
 
 

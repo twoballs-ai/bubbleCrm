@@ -23,13 +23,7 @@ function graphModel() {
       { data: { id: '7', label: 'Этап 8' }, position: { x: 450, y: 400 } },
     ],
     edges: [
-      { data: { source: '0', target: '1', label: 'переход с айди0 на айди1' } },
-      { data: { source: '1', target: '2', label: 'переход с айди0 на айди1' } },
-      { data: { source: '2', target: '3', label: 'переход с айди0 на айди1' } },
-      { data: { source: '3', target: '4', label: 'переход с айди0 на айди1' } },
-      { data: { source: '4', target: '5', label: 'переход с айди0 на айди1' } },
-      { data: { source: '5', target: '6', label: 'переход с айди0 на айди1' } },
-      { data: { source: '6', target: '7', label: 'переход с айди0 на айди1' } },
+      { data: { id: '0-1', label: 'Этап 1-1' }, position: { x: 120, y: 170 } },
 
     ]
   }

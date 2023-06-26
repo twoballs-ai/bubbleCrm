@@ -43,11 +43,11 @@ function graphModel() {
 }
 
 // функция отрисовки рендеринга страниц, и рендеринга ссылок. 
-function draw() {
+function userDraw() {
 
   const TextBody = document.createElement('div')
   TextBody.id = 'TextBody'
-  TextBody.innerHTML = `<h3 class="redactClass">Режим редактора</h3>`;
+  TextBody.innerHTML = `<h3 class="redactClass">Режим просмотра</h3>`;
   document.body.prepend(TextBody)
   
   for (let items = 0; items < num; items++) {
@@ -63,7 +63,7 @@ function draw() {
     // создание dom-элемента
     const element = document.createElement('div')
     // const textNode = document.createElement('p');
-    element.addEventListener('mousedown', onMouseDown)
+    // element.addEventListener('mousedown', onMouseDown)
     const id = 'el' + items
     element.id = id
     // console.log(id)

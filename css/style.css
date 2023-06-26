@@ -22,6 +22,7 @@ canvas {
 }
 */
 #TextBody{
+  pointer-events: none;
   display: flex;
   justify-content: center;
   position: absolute;

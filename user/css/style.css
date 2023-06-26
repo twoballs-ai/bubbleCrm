@@ -9,6 +9,7 @@ body {
 canvas {
   display: block;
   border: 1px solid black;
+  
 }
 
 /*div {
@@ -159,4 +160,56 @@ top: 35%;
   font-family: Helvetica, Arial, sans-serif;
 
 
+}
+
+.audioIcon{
+  display: block;
+  position: absolute;
+  color: #073800;
+  opacity: 0.60;
+  /* background-color: #f36551; */
+  fill: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  left: -25px;
+  top:25px;
+}
+.videoIcon{
+  display: block;
+  position: absolute;
+  color: #f50b0b;
+  opacity: 0.60;
+  /* background-color: #f36551; */
+  fill: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  left: -20px;
+  top:5px;
+}
+.textIcon{
+  display: block;
+  position: relative;
+  color: #002147;
+  opacity: 0.60;
+  /* background-color: #f36551; */
+  fill: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  left: -25px;
+  top:25px;
+}
+
+
+
+.imageIcon{
+  display: block;
+  position: relative;
+  color: #f50b0b;
+  opacity: 0.60;
+  /* background-color: #f36551; */
+  fill: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  left: -20px;
+  top:25px;
 }

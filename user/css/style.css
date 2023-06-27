@@ -165,7 +165,7 @@ top: 35%;
 .audioIcon{
   display: block;
   position: absolute;
-  color: #073800;
+  color: #f0c506;
   opacity: 0.60;
   /* background-color: #f36551; */
   fill: currentColor;
@@ -188,28 +188,28 @@ top: 35%;
 }
 .textIcon{
   display: block;
-  position: relative;
-  color: #002147;
+  position: absolute;
+  color: #007aaa;
   opacity: 0.60;
   /* background-color: #f36551; */
   fill: currentColor;
   width: 1.5em;
   height: 1.5em;
-  left: -25px;
-  top:25px;
+  left: 3px;
+  top:-13px;
 }
 
 
 
 .imageIcon{
   display: block;
-  position: relative;
-  color: #f50b0b;
+  position: absolute;
+  color: #00df43;
   opacity: 0.60;
   /* background-color: #f36551; */
   fill: currentColor;
   width: 1.5em;
   height: 1.5em;
-  left: -20px;
-  top:25px;
+  left: -27px;
+  top:50px;
 }

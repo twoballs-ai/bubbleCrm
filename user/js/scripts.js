@@ -83,6 +83,7 @@ function userDraw() {
     // element.setAttribute('href', link);
     element.className = style;
   console.log(audio!=='')
+  //  здесь тернарный оператор для отображения видео фото текстовых и фото иконок:
   const icons= (typeof audio !== "undefined" && audio !== "null" && typeof video !== "undefined" && video !== "null" && typeof text !== "undefined" && text !== "null" && typeof image !== "undefined" && image !== "null")?
     element.innerHTML = `${audioIcon}${videoIcon}${texIcon}${imageIcon}<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p></div>` : 
       (typeof audio !== "undefined" && audio !== "null" && typeof video !== "undefined" && video !== "null" && typeof text !== "undefined" && text !== "null")?

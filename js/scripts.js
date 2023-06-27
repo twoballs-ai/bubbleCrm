@@ -49,7 +49,7 @@ function draw() {
   TextBody.id = 'TextBody'
   TextBody.innerHTML = `<h3 class="redactClass">Режим редактора</h3>`;
   document.body.prepend(TextBody)
-  
+  document.addEventListener("contextmenu", onContextMenu,false);
   for (let items = 0; items < num; items++) {
     // subnodes= NodesID[items]['subnodes']
          // console.log(subnodes)
@@ -86,7 +86,7 @@ function draw() {
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
     element.addEventListener("dblclick", {handleEvent: clickBubbles, link: link});
-    element.addEventListener("contextmenu",{handleEvent: onContextMenu, buttonId: buttonId});
+    element.addEventListener("contextmenu",{handleEvent: onContextBubbleMenu, buttonId: buttonId});
   }
 
   // connect(elements,subelements)
@@ -142,7 +142,9 @@ console.log(e)
 
   document.body.addEventListener('mousemove', onMouseMove)
   document.body.addEventListener('mouseup', onMouseUp)
-} 
+} else if(e.which==3){
+  console.log('hui')
+}
   
 }
 
@@ -160,11 +162,22 @@ function onMouseUp() {
   document.body.removeEventListener('mousemove', onMouseMove)
   document.body.removeEventListener('mouseup', onMouseUp)
 }
-
-function onContextMenu(e){
+// меню для шаров
+function onContextBubbleMenu(e){
   e.preventDefault()
   console.log(this.buttonId)
-let contextMenuOpen = document.querySelector('.context-menu-open'); 
+let contextBubbleMenuOpen = document.querySelector('.bubble-menu-open'); 
+contextBubbleMenuOpen.style.left = e.clientX + 'px'; 
+contextBubbleMenuOpen.style.top = e.clientY + 'px';
+contextBubbleMenuOpen.style.display = 'block';
+window.addEventListener('click', function() {
+  contextBubbleMenuOpen.style.display = 'none';
+});
+}
+// меню для канваса
+function onContextMenu(e){
+  e.preventDefault()
+let contextMenuOpen = document.querySelector('.context-menu-open '); 
 contextMenuOpen.style.left = e.clientX + 'px'; 
 contextMenuOpen.style.top = e.clientY + 'px';
 contextMenuOpen.style.display = 'block';

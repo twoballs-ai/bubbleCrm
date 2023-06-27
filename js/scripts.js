@@ -16,7 +16,7 @@ function graphModel() {
   const startElements = {
     nodes: [
       { data: { id: 'el0', label: 'Этап 1', style:'bubblePrimary', link:'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 100, y: 150 } },
-      { data: { id: 'el1', label: 'Этап 2', style:'bubbleWarning', link:'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 250, y: 150 } },
+      { data: { id: 'el1', label: 'Этап 2', style:'bubbleWarning', link:'https://www.vk.com' }, position: { x: 250, y: 150 } },
       { data: { id: 'el2', label: 'Этап 3', style:'bubblePrimary', link:'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 400, y: 250 } },
       { data: { id: 'el3', label: 'Этап 4', style:'bubbleSecondary', link:'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 100, y: 550 } },
       { data: { id: 'el4', label: 'Этап 5', style:'bubblePrimary', link:'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 350, y: 350 } },
@@ -58,8 +58,8 @@ function draw() {
     positionX = NodesID[items]['position']['x']
     positionY = NodesID[items]['position']['y']
     style = NodesID[items]['data']['style']
-
-      // console.log(subnodes)
+    buttonId = NodesID[items]['data']['id']
+      // console.log(buttonId)
     // создание dom-элемента
     const element = document.createElement('div')
     // const textNode = document.createElement('p');
@@ -86,6 +86,7 @@ function draw() {
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
     element.addEventListener("dblclick", {handleEvent: clickBubbles, link: link});
+    element.addEventListener("contextmenu",{handleEvent: onContextMenu, buttonId: buttonId});
   }
 
   // connect(elements,subelements)
@@ -128,7 +129,9 @@ window.location.href =this.link
 /*------------------------------------*/
 
 function onMouseDown(e) {
-  e.preventDefault()
+  if(e.which==1) {
+    console.log('mouse down state with left click');
+    e.preventDefault()
 console.log(e)
   // координаты нажатия мыши внутри элемента
 
@@ -139,6 +142,8 @@ console.log(e)
 
   document.body.addEventListener('mousemove', onMouseMove)
   document.body.addEventListener('mouseup', onMouseUp)
+} 
+  
 }
 
 function onMouseMove(e) {
@@ -157,7 +162,15 @@ function onMouseUp() {
 }
 
 function onContextMenu(e){
-  console.log('chlen')
+  e.preventDefault()
+  console.log(this.buttonId)
+let contextMenuOpen = document.querySelector('.context-menu-open'); 
+contextMenuOpen.style.left = e.clientX + 'px'; 
+contextMenuOpen.style.top = e.clientY + 'px';
+contextMenuOpen.style.display = 'block';
+window.addEventListener('click', function() {
+  contextMenuOpen.style.display = 'none';
+});
 }
 /*------------------------------------*/
 

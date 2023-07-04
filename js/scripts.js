@@ -20,19 +20,20 @@ async function graphModel() {
 }
 
 
-addNode.onsubmit = async (e) => {
-  e.preventDefault();
-  const url = 'http://127.0.0.1:8000/api/node/1'
-  let response = await fetch(url, {
-    method: 'POST',
-    body: new FormData(addNode)
-  });
 
-  let result = await response.json();
-
-  alert(result.message);
-};
 // отправка данных для ноды, отрефакторить:
+function handleSubmit(event) {
+  event.preventDefault();
+
+  const data = new FormData(event.target);
+
+ const value = Object.fromEntries(data.entries());
+
+  console.log({ value });
+}
+
+const form = document.getElementById('addNode');
+form.addEventListener('submit', handleSubmit);
 // function serializeForm(formNode) {
 //   return new FormData(formNode)
 // }

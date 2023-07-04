@@ -19,6 +19,60 @@ async function graphModel() {
   }
 }
 
+
+addNode.onsubmit = async (e) => {
+  e.preventDefault();
+  const url = 'http://127.0.0.1:8000/api/node/1'
+  let response = await fetch(url, {
+    method: 'POST',
+    body: new FormData(addNode)
+  });
+
+  let result = await response.json();
+
+  alert(result.message);
+};
+// отправка данных для ноды, отрефакторить:
+// function serializeForm(formNode) {
+//   return new FormData(formNode)
+// }
+
+// async function handleAddNodeFormSubmit(event) {
+//   // Просим форму не отправлять данные самостоятельно
+//   event.preventDefault()
+//   // const data = serializeForm(event.target)
+//   console.log(data)
+//   const response = await addNode(data)
+// }
+// const applicantForm = document.getElementById('add-node')
+// applicantForm.addEventListener('submit', handleAddNodeFormSubmit)
+// console.log('Отправка!')
+
+
+// async function addNode(data) {
+//   console.log(data)
+//   const url = 'http://127.0.0.1:8000/api/node/1'
+//   return await fetch(url, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json;charset=utf-8' },
+//     body:  new FormData(add-node),
+//   })
+//   // try {
+//   //   let res = await fetch(url, {
+//   //     method: 'POST',
+//   //     headers: {
+//   //       'Content-Type': 'application/json;charset=utf-8'
+//   //     },
+//   //     body: data.stringify()
+//   //   });
+//   //   return await res.json();
+//   // } catch (error) {
+//   //   console.log(error);
+//   // }
+// }
+
+
+
 // функция отрисовки рендеринга страниц, и рендеринга ссылок. 
 function draw() {
   const TextBody = document.createElement('div')
@@ -39,7 +93,7 @@ async function drawingBubbles() {
     // subnodes= NodesID[items]['subnodes']
     //  console.log(await NodesID)
     textIntoTheCircle = (await NodesID)[items]['label']
-    console.log(textIntoTheCircle)
+    // console.log(textIntoTheCircle)
     link = (await NodesID)[items]['link']
     positionX = (await NodesID)[items]['posX']
     positionY = (await NodesID)[items]['posY']
@@ -71,7 +125,7 @@ async function drawingBubbles() {
     element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
     element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
   }
-  console.log(elements)
+  // console.log(elements)
   // connect(elements,subelements)
   connect(elements)
 }
@@ -162,13 +216,22 @@ function onContextBubbleMenu(e) {
 // меню для канваса
 function onContextMenu(e) {
   e.preventDefault()
-  let contextMenuOpen = document.querySelector('.context-menu-open ');
+  let contextMenuOpen = document.querySelector('.context-menu-open');
   contextMenuOpen.style.left = e.clientX + 'px';
   contextMenuOpen.style.top = e.clientY + 'px';
   contextMenuOpen.style.display = 'block';
   window.addEventListener('click', function () {
     contextMenuOpen.style.display = 'none';
   });
+}
+function onContextAddNode(e) {
+  e.preventDefault()
+ 
+  let contextAddNode = document.querySelector('.add-node-open');
+  contextAddNode.style.left = e.clientX + 'px';
+  contextAddNode.style.top = e.clientY + 'px';
+  contextAddNode.style.display = 'block';
+  console.log('dbdf')
 }
 /*------------------------------------*/
 
@@ -259,11 +322,11 @@ function drawLine(x1, x2, y1, y2) {
   context.strokeStyle = "rgba(166, 196, 255, 1)"
   context.stroke()
 }
-function addBubble() {
-  NodesID.push({ data: { id: 'el9', label: 'Этап 10', style: 'bubbleSecondary', link: 'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 850, y: 850 } })
-  console.log(NodesID)
+// function addBubble() {
+//   NodesID.push({ data: { id: 'el9', label: 'Этап 10', style: 'bubbleSecondary', link: 'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 850, y: 850 } })
+//   console.log(NodesID)
 
-}
+// }
 // function writeMessage(text, posx, posy) {
 //   context.font = '18pt Calibri';
 //   context.fillStyle = 'red';

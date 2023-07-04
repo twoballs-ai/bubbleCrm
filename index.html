@@ -40,16 +40,48 @@
 <div class="bubble-menu-open">
   <ul>
       <li>Редактировать урок</li>
-      <li>Ссылка 2</li>
+      <li>Удалить этап</li>
       <li>Ссылка 3</li>
   </ul>
 </div>
 <div class="context-menu-open">
   <ul>
-      <li onclick="addBubble();">Добавить новый этап</li>
+      <li onclick="onContextAddNode(event);">Добавить новый этап</li>
       <li>Ссылка 2</li>
       <li>Ссылка 3</li>
   </ul>
+</div>
+<div class="add-node-open">
+  <form id="addNode">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите id элемента с ним вы будете соединять узлы и ноды</label>
+      <input type="text" class="form-control" name="Id" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите название этапа</label>
+      <input type="text" class="form-control" name="Label" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <select class="form-select" aria-label="Пример выбора по умолчанию" name="Style">
+      <option selected>Откройте это меню выбора</option>
+      <option value="bubblePrimary">bubblePrimary</option>
+      <option value="bubbleSecondary">bubbleSecondary</option>
+      <option value="bubbleWarning">bubbleWarning</option>
+    </select>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Добавьте ссылку</label>
+      <input type="text" class="form-control" name="Link" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Добавьте координаты оси X Y  в пределах значений 1920 1080 </label>
+      <input type="text" class="form-control" name="PosX" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Добавьте координаты оси Y</label>
+      <input type="text" class="form-control" name="PosY" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+  </form>
 </div>
     <div>
       

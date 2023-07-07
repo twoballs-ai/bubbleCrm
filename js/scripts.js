@@ -10,7 +10,7 @@ const elements = {}
 const EdgesId = listEdges()
 
 async function graphModel() {
-  const url = 'http://127.0.0.1:8000/api/canvas/9'
+  const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -26,7 +26,7 @@ async function handleSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
-  data.append('canvas', '9');
+  data.append('canvas', '1');
  const value = Object.fromEntries(data.entries());
  const response = await addNode(value)
   console.log(data);
@@ -51,6 +51,7 @@ form.addEventListener('submit', handleSubmit);
 
 
 async function addNode(value) {
+ 
   console.log(value)
   const url = 'http://127.0.0.1:8000/api/node/1'
   return await fetch(url, {
@@ -58,18 +59,17 @@ async function addNode(value) {
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     body:  JSON.stringify(value)
   })
-  // try {
-  //   let res = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json;charset=utf-8'
-  //     },
-  //     body: data.stringify()
-  //   });
-  //   return await res.json();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+}
+async function deleteNode(e) {
+  
+  console.log('piska')
+  const url = 'http://127.0.0.1:8000/api/node-detail/1'
+  console.log(url)
+  // return await fetch(url, {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  //   body:  JSON.stringify(value)
+  // })
 }
 
 
@@ -206,6 +206,7 @@ function onMouseUp() {
 function onContextBubbleMenu(e) {
   e.preventDefault()
   console.log(this.buttonId)
+  // let bubbleId = this.buttonId
   let contextBubbleMenuOpen = document.querySelector('.bubble-menu-open');
   contextBubbleMenuOpen.style.left = e.clientX + 'px';
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
@@ -234,6 +235,9 @@ function onContextAddNode(e) {
   contextAddNode.style.display = 'block';
   console.log('dbdf')
 }
+
+
+
 /*------------------------------------*/
 
 /*------------------------------------*/

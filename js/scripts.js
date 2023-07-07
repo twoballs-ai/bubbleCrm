@@ -10,7 +10,7 @@ const elements = {}
 const EdgesId = listEdges()
 
 async function graphModel() {
-  const url = 'http://127.0.0.1:8000/api/canvas/1'
+  const url = 'http://127.0.0.1:8000/api/canvas/9'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -22,14 +22,14 @@ async function graphModel() {
 
 
 // отправка данных для ноды, отрефакторить:
-function handleSubmit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
-
+  data.append('canvas', '9');
  const value = Object.fromEntries(data.entries());
-
-  console.log({ value });
+ const response = await addNode(value)
+  console.log(data);
 }
 
 const form = document.getElementById('addNode');
@@ -50,27 +50,27 @@ form.addEventListener('submit', handleSubmit);
 // console.log('Отправка!')
 
 
-// async function addNode(data) {
-//   console.log(data)
-//   const url = 'http://127.0.0.1:8000/api/node/1'
-//   return await fetch(url, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-//     body:  new FormData(add-node),
-//   })
-//   // try {
-//   //   let res = await fetch(url, {
-//   //     method: 'POST',
-//   //     headers: {
-//   //       'Content-Type': 'application/json;charset=utf-8'
-//   //     },
-//   //     body: data.stringify()
-//   //   });
-//   //   return await res.json();
-//   // } catch (error) {
-//   //   console.log(error);
-//   // }
-// }
+async function addNode(value) {
+  console.log(value)
+  const url = 'http://127.0.0.1:8000/api/node/1'
+  return await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    body:  JSON.stringify(value)
+  })
+  // try {
+  //   let res = await fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json;charset=utf-8'
+  //     },
+  //     body: data.stringify()
+  //   });
+  //   return await res.json();
+  // } catch (error) {
+  //   console.log(error);
+  // }
+}
 
 
 

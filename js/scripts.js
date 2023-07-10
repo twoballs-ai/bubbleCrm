@@ -8,7 +8,7 @@ let current = null
 const NodesID = listNodes()
 const elements = {}
 const EdgesId = listEdges()
-
+let elementId = {}
 async function graphModel() {
   const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
@@ -34,6 +34,19 @@ async function handleSubmit(event) {
 
 const form = document.getElementById('addNode');
 form.addEventListener('submit', handleSubmit);
+
+async function handleAddEdgeSubmit(event) {
+  event.preventDefault();
+
+  const data = new FormData(event.target);
+  data.append('canvas', '1');
+ const value = Object.fromEntries(data.entries());
+ const response = await addEdge(value)
+  console.log(data);
+}
+
+const formAddEdge = document.getElementById('addEdge');
+formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 // function serializeForm(formNode) {
 //   return new FormData(formNode)
 // }
@@ -48,28 +61,42 @@ form.addEventListener('submit', handleSubmit);
 // const applicantForm = document.getElementById('add-node')
 // applicantForm.addEventListener('submit', handleAddNodeFormSubmit)
 // console.log('Отправка!')
-
+function getElementId(elemId) {
+  elementId.elid = elemId
+  console.log(elementId)
+}
 
 async function addNode(value) {
  
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node/1'
+  const url = 'http://127.0.0.1:8000/api/node-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     body:  JSON.stringify(value)
   })
 }
+
+async function addEdge(value) {
+ 
+  console.log(value)
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  return await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    body:  JSON.stringify(value)
+  })
+}
+
 async function deleteNode(e) {
-  
-  console.log('piska')
-  const url = 'http://127.0.0.1:8000/api/node-detail/1'
-  console.log(url)
-  // return await fetch(url, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
-  //   body:  JSON.stringify(value)
-  // })
+    // console.log(elementId)
+    const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+    console.log(url)
+
+  return await fetch(url+elementId['elid'], {
+    method: 'DELETE'
+  })
+  .then(console.log('succesful delete'));
 }
 
 
@@ -109,7 +136,7 @@ async function drawingBubbles() {
     // console.log(id)
     // element.setAttribute('href', link);
     element.className = style;
-    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p></div>`;
+    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
     document.body.prepend(element)
     // document.body.prepend(textNode)
     // console.log(element)
@@ -183,7 +210,7 @@ function onMouseDown(e) {
     document.body.addEventListener('mousemove', onMouseMove)
     document.body.addEventListener('mouseup', onMouseUp)
   } else if (e.which == 3) {
-    console.log('hui')
+    // console.log('hui')
   }
 
 }
@@ -205,12 +232,13 @@ function onMouseUp() {
 // меню для шаров
 function onContextBubbleMenu(e) {
   e.preventDefault()
-  console.log(this.buttonId)
+  // console.log(this.buttonId)
   // let bubbleId = this.buttonId
   let contextBubbleMenuOpen = document.querySelector('.bubble-menu-open');
   contextBubbleMenuOpen.style.left = e.clientX + 'px';
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
   contextBubbleMenuOpen.style.display = 'block';
+  getElementId(this.buttonId)
   window.addEventListener('click', function () {
     contextBubbleMenuOpen.style.display = 'none';
   });
@@ -235,6 +263,27 @@ function onContextAddNode(e) {
   contextAddNode.style.display = 'block';
   console.log('dbdf')
 }
+
+function onContextAddEdge(e) {
+  e.preventDefault()
+ 
+  let contextAddNode = document.querySelector('.add-edge-open');
+  contextAddNode.style.left = e.clientX + 'px';
+  contextAddNode.style.top = e.clientY + 'px';
+  contextAddNode.style.display = 'block';
+  console.log('edge')
+}
+
+function onContextDeleteEdge(e) {
+  e.preventDefault()
+ 
+  let contextAddNode = document.querySelector('.delete-edge-open');
+  contextAddNode.style.left = e.clientX + 'px';
+  contextAddNode.style.top = e.clientY + 'px';
+  contextAddNode.style.display = 'block';
+  console.log('deleteedge')
+}
+
 
 
 
@@ -296,11 +345,11 @@ function translate(el, x, y) {
 async function connect(elements) {
 
   const subedges = (await EdgesId).length
-  console.log(subedges)
+  // console.log(EdgesId)
   for (let i = 0; i < subedges; i++) {
     source = (await EdgesId)[i].source
     target = (await EdgesId)[i].target
-    console.log((await EdgesId)[i].target)
+    // console.log((await EdgesId)[i].target)
     //  console.log(elements[source])
     //  console.log(elements[target])
     //  console.log(source)

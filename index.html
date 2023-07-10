@@ -41,16 +41,43 @@
   <ul>
       <li>Редактировать урок</li>
       <li onclick="deleteNode();">Удалить этап</li>
-      <li>Ссылка 3</li>
+      <li onclick="onContextAddEdge(event);">Соединить этапы</li>
   </ul>
 </div>
 <div class="context-menu-open">
   <ul>
       <li onclick="onContextAddNode(event);">Добавить новый этап</li>
-      <li>Ссылка 2</li>
+      <li onclick="onContextDeleteEdge(event);">Удалить неиспользуемый узел</li>
       <li>Ссылка 3</li>
   </ul>
 </div>
+<!-- меню для добавления узлов. отрефакторить и убрать в будущем меню. -->
+<div class="add-edge-open">
+  <form id="addEdge">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите id первого элемента для соединенияэлемента </label>
+      <input type="text" class="form-control" name="source" id="source" aria-describedby="source">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите id второго элемента для соединенияэлемента </label>
+      <input type="text" class="form-control" name="target" id="target" aria-describedby="target">
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+  </form>
+</div>
+<!-- удаление узла -->
+<div class="delete-edge-open">
+  <form id="delEdge">
+    <select class="form-select" name="edges" aria-label="Default select example">
+      <option selected>выберите узел для его удаления</option>
+      <option value="1">One</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+    </select>
+    <button type="submit" class="btn btn-danger">удалить узел</button>
+  </form>
+</div>
+<!-- меню для добавления нодов -->
 <div class="add-node-open">
   <form id="addNode">
     <div class="mb-3">
@@ -67,10 +94,6 @@
       <option value="bubbleSecondary">bubbleSecondary</option>
       <option value="bubbleWarning">bubbleWarning</option>
     </select>
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Добавьте ссылку</label>
-      <input type="text" class="form-control" name="link" id="exampleInputEmail1" aria-describedby="emailHelp">
-    </div>
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Добавьте координаты оси X Y  в пределах значений 1920 1080 </label>
       <input type="text" class="form-control" name="posX" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -90,7 +113,7 @@
     <p>Окно действий</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">1<button type="button" class="btn btn-secondary" onclick="myFunction();">Сохранить изменения</button></li>
+    <li class="list-group-item">1<button type="button" class="btn btn-secondary" onclick="myFunction();">Сохранить карту нодов</button></li>
     <li class="list-group-item">2<button type="button" class="btn btn-secondary" onclick="myFunction2();">Удалить граф</button></li>
     <li class="list-group-item">3<button type="button" class="btn btn-secondary">Пока не придумал</button></li>
   </ul>

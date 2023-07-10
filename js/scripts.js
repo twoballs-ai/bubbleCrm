@@ -99,6 +99,15 @@ async function deleteNode(e) {
   .then(console.log('succesful delete'));
 }
 
+async function getEdgeList() {
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  try {
+    let res = await fetch(url);
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 // функция отрисовки рендеринга страниц, и рендеринга ссылок. 

@@ -7,8 +7,12 @@ const size = 100
 let current = null
 const NodesID = listNodes()
 const elements = {}
+const newElements = {}
 const EdgesId = listEdges()
 let elementId = {}
+let numBubbles = 0
+
+
 async function graphModel() {
   const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
@@ -21,19 +25,7 @@ async function graphModel() {
 
 
 
-// отправка данных для ноды, отрефакторить:
-async function handleSubmit(event) {
-  event.preventDefault();
 
-  const data = new FormData(event.target);
-  data.append('canvas', '1');
- const value = Object.fromEntries(data.entries());
- const response = await addNode(value)
-  console.log(data);
-}
-
-const form = document.getElementById('addNode');
-form.addEventListener('submit', handleSubmit);
 
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
@@ -66,15 +58,19 @@ function getElementId(elemId) {
   console.log(elementId)
 }
 
-async function addNode(value) {
+function saveAll(){
+  // async function addNode(value) {
  
-  console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-list/1'
-  return await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body:  JSON.stringify(value)
-  })
+  //   console.log(value)
+  //   const url = 'http://127.0.0.1:8000/api/node-list/1'
+  //   return await fetch(url, {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  //     body:  JSON.stringify(value)
+  //   })
+  // }
+  
+
 }
 
 async function addEdge(value) {
@@ -117,55 +113,12 @@ function draw() {
   TextBody.innerHTML = `<h3 class="redactClass">Режим редактора</h3>`;
   document.body.prepend(TextBody)
   canvas.addEventListener("contextmenu", onContextMenu);
-  drawingBubbles()
+  drawingBubblesFromServer()
   // connectSubAndParent(subelements, elements[parentId])
   // console.log(elements['el7'])
 }
 
-// функция рисования шаров
-async function drawingBubbles() {
-  const num = (await NodesID).length
-  // console.log(num)
-  for (let items = 0; items < num; items++) {
-    // subnodes= NodesID[items]['subnodes']
-    //  console.log(await NodesID)
-    textIntoTheCircle = (await NodesID)[items]['label']
-    // console.log(textIntoTheCircle)
-    link = (await NodesID)[items]['link']
-    positionX = (await NodesID)[items]['posX']
-    positionY = (await NodesID)[items]['posY']
-    style = (await NodesID)[items]['style']
-    buttonId = (await NodesID)[items]['id']
-    // создание dom-элемента
-    const element = document.createElement('div')
-    // const textNode = document.createElement('p');
-    element.addEventListener('mousedown', onMouseDown)
-    const id = 'el' + items
-    element.id = id
-    // console.log(id)
-    // element.setAttribute('href', link);
-    element.className = style;
-    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
-    document.body.prepend(element)
-    // document.body.prepend(textNode)
-    // console.log(element)
-    // тут будут храниться и изменяться все его координаты
-    elements[id] = {
-      x: positionX,
-      y: positionY,
-      startX: 0,
-      startY: 0
-    }
 
-    // начальное положение
-    translate(element, elements[id].x, elements[id].y)
-    element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
-    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
-  }
-  // console.log(elements)
-  // connect(elements,subelements)
-  connect(elements)
-}
 async function listNodes() {
   // graphModel().then(bubbles => {
   //   console.log(bubbles) // fetched movies
@@ -196,9 +149,120 @@ async function listEdges() {
     });
   }
   listingEdges()
-  console.log(itemsEdgesID)
+  // console.log(itemsEdgesID)
   return itemsEdgesID
 }
+
+// функция рисования шаров
+async function drawingBubblesFromServer() {
+  let num = (await NodesID).length
+  // console.log(num)
+  for (let items = 0; items < num; items++) {
+    // subnodes= NodesID[items]['subnodes']
+    //  console.log(await NodesID)
+    
+    textIntoTheCircle = (await NodesID)[items]['label']
+    // console.log(textIntoTheCircle)
+    // link = (await NodesID)[items]['link']
+    positionX = (await NodesID)[items]['posX']
+    positionY = (await NodesID)[items]['posY']
+    style = (await NodesID)[items]['style']
+    buttonId = (await NodesID)[items]['id']
+    // создание dom-элемента
+    const element = document.createElement('div')
+    // const textNode = document.createElement('p');
+    element.addEventListener('mousedown', onMouseDown)
+    const id = buttonId
+    element.id = id
+    // console.log(id)
+    // element.setAttribute('href', link);
+    element.className = style;
+    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
+    document.body.prepend(element)
+    // document.body.prepend(textNode)
+    // console.log(element)
+    // тут будут храниться и изменяться все его координаты
+    elements[id] = {
+      
+      x: positionX,
+      y: positionY,
+      startX: 0,
+      startY: 0,
+      label: textIntoTheCircle,
+      style: style
+    }
+
+    // начальное положение
+    translate(element, elements[id].x, elements[id].y)
+    // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
+    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
+  }
+  console.log(elements)
+  // console.log(Object.keys(elements).length)
+  // connect(elements,subelements)
+  connect(elements)
+}
+
+async function drawingBubblesAfterEdit() {
+  // let num = Object.keys(elements).length
+
+  for (key in elements) {
+    for (let item of (await NodesID)) {
+      console.log(item)
+      console.log(key)
+      if (Object.values(item).includes(key)) {
+        console.log('exists');
+        break
+      }
+      else{
+        
+      }
+    }
+    console.log(key)
+    
+    textIntoTheCircle = elements[key]['label']
+    console.log(textIntoTheCircle)
+    // link = (await NodesID)[items]['link']
+    positionX = elements[key]['x']
+    positionY = elements[key]['y']
+    style = elements[key]['style']
+    buttonId = key
+    // создание dom-элемента
+    const element = document.createElement('div')
+    // const textNode = document.createElement('p');
+    element.addEventListener('mousedown', onMouseDown)
+    const id = buttonId
+    element.id = id
+    // console.log(id)
+    // element.setAttribute('href', link);
+    element.className = style;
+    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
+    document.body.prepend(element)
+    // document.body.prepend(textNode)
+    // console.log(element)
+    // тут будут храниться и изменяться все его координаты
+
+    console.log(element)
+    elements[id] = {
+      x: positionX,
+      y: positionY,
+      startX: 0,
+      startY: 0,
+      label: textIntoTheCircle,
+      style: style
+    }
+
+    // начальное положение
+    translate(element, elements[id].x, elements[id].y)
+    // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
+    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
+  }
+  // console.log(num)
+  console.log(elements)
+  // connect(elements,subelements)
+  connect(elements)
+}
+
 function clickBubbles(event) {
   console.log('чмошник')
   console.log(this.link)
@@ -214,7 +278,7 @@ function onMouseDown(e) {
     // координаты нажатия мыши внутри элемента
     elements[e.target.id].startX = e.x - elements[e.target.id].x
     elements[e.target.id].startY = e.y - elements[e.target.id].y
-    // console.log(elements[e.target.id].startX = e.x - elements[e.target.id].x)
+    console.log(elements[e.target.id].startX = e.x - elements[e.target.id].x)
     current = e.target
     document.body.addEventListener('mousemove', onMouseMove)
     document.body.addEventListener('mouseup', onMouseUp)
@@ -228,10 +292,10 @@ function onMouseMove(e) {
   context.clearRect(0, 0, width, height)
   const x = elements[current.id].x = e.x - elements[current.id].startX
   const y = elements[current.id].y = e.y - elements[current.id].startY
-  console.log()
+  // console.log(current)
   translate(current, x, y)
   connect(elements)
-  // connectSub(elements,subelements)
+
 }
 
 function onMouseUp() {
@@ -263,6 +327,7 @@ function onContextMenu(e) {
     contextMenuOpen.style.display = 'none';
   });
 }
+
 function onContextAddNode(e) {
   e.preventDefault()
  
@@ -270,7 +335,7 @@ function onContextAddNode(e) {
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
   contextAddNode.style.display = 'block';
-  console.log('dbdf')
+
 }
 
 function onContextAddEdge(e) {
@@ -333,7 +398,7 @@ function onContextDeleteEdge(e) {
 
 function translate(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`
-  // console.log(x,y)
+  // console.log(el,x,y)
 }
 
 // function connect(elements) {
@@ -409,6 +474,30 @@ function drawLine(x1, x2, y1, y2) {
 // window.addEventListener('resize', onResize, false);
 //     onResize();
 
+// отправка данных для ноды, отрефакторить:
+async function handleSubmit(event) {
+  event.preventDefault();
+  const data = new FormData(event.target);
+ const value = Object.fromEntries(data.entries());
+//  const response = await addNode(value)
+console.log(event)
+let id =value.id
+let label = value.label
+let style = value.style
+elements[id] = {
+  x: 500,
+  y: 50,
+  startX: 0,
+  startY: 0,
+  label: label,
+  style: style
+}
+let contextAddNode = document.querySelector('.add-node-open');
+contextAddNode.style.display = 'none';
+drawingBubblesAfterEdit()
+}
 
+const form = document.getElementById('addNode');
+form.addEventListener('submit', handleSubmit);
 
 

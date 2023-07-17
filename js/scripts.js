@@ -206,27 +206,18 @@ async function drawingBubblesFromServer() {
 async function drawingBubblesAfterEdit() {
   // let num = Object.keys(elements).length
 
-  for (key in elements) {
-    for (let item of (await NodesID)) {
-      console.log(item)
-      console.log(key)
-      if (Object.values(item).includes(key)) {
-        console.log('exists');
-        break
-      }
-      else{
-        
-      }
-    }
-    console.log(key)
+  for (items in elements) {
+    searchDuplicate(items).then((res)=>{
+      if (res===true) {
+        console.log(items)
     
-    textIntoTheCircle = elements[key]['label']
+    textIntoTheCircle = elements[items]['label']
     console.log(textIntoTheCircle)
     // link = (await NodesID)[items]['link']
-    positionX = elements[key]['x']
-    positionY = elements[key]['y']
-    style = elements[key]['style']
-    buttonId = key
+    positionX = elements[items]['x']
+    positionY = elements[items]['y']
+    style = elements[items]['style']
+    buttonId = items
     // создание dom-элемента
     const element = document.createElement('div')
     // const textNode = document.createElement('p');
@@ -256,7 +247,15 @@ async function drawingBubblesAfterEdit() {
     translate(element, elements[id].x, elements[id].y)
     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
     element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
+      }
+      else{
+        console.log('ошибка')
+      }
+
+    })
+    
   }
+  
   // console.log(num)
   console.log(elements)
   // connect(elements,subelements)
@@ -359,63 +358,11 @@ function onContextDeleteEdge(e) {
 }
 
 
-
-
-/*------------------------------------*/
-
-/*------------------------------------*/
-
-// function onMouseDownSub(e) {
-//   e.preventDefault()
-
-//   // координаты нажатия мыши внутри элемента
-
-//   subelements[e.target.id].startX = e.x - subelements[e.target.id].x
-//   subelements[e.target.id].startY = e.y - subelements[e.target.id].y
-// // console.log(elements[e.target.id].startX = e.x - elements[e.target.id].x)
-//   current = e.target
-
-//   document.body.addEventListener('mousemove', onMouseMoveSub)
-//   document.body.addEventListener('mouseup', onMouseUpSub)
-// }
-
-// function onMouseMoveSub(e) {
-//   context.clearRect(0, 0, width, height)
-//   const x = subelements[current.id].x = e.x - subelements[current.id].startX
-//   const y = subelements[current.id].y = e.y - subelements[current.id].startY
-
-//   translateSub(current, x, y)
-//   connect(elements)
-//   connectSub(elements,subelements)
-// }
-
-// function onMouseUpSub() {
-//   document.body.removeEventListener('mousemove', onMouseMoveSub)
-//   document.body.removeEventListener('mouseup', onMouseUpSub)
-// }
-
-/*------------------------------------*/
-
 function translate(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`
   // console.log(el,x,y)
 }
 
-// function connect(elements) {
-
-//   // context.clearRect(0, 0, width, height)
-// // console.log(elements)
-//   console.log('1')
-//   for (let i = 0; i < num - 1; i++) {
-//         drawLine(
-//           elements['el' + i].x,
-//           elements['el' + (i + 1)].x,
-//           elements['el' + i].y,
-//           elements['el' + (i + 1)].y
-//         )
-//       }
-
-// }
 async function connect(elements) {
 
   const subedges = (await EdgesId).length
@@ -423,14 +370,7 @@ async function connect(elements) {
   for (let i = 0; i < subedges; i++) {
     source = (await EdgesId)[i].source
     target = (await EdgesId)[i].target
-    // console.log((await EdgesId)[i].target)
-    //  console.log(elements[source])
-    //  console.log(elements[target])
-    //  console.log(source)
-    //  console.log(target)
-    // parentidcycle = subelements['el0' + i].parentId
-    // console.log(parentidcycle)
-    // console.log(elements[parentidcycle].y)
+
     drawLine(
       elements[source].x,
       elements[target].x,
@@ -450,18 +390,7 @@ function drawLine(x1, x2, y1, y2) {
   context.strokeStyle = "rgba(166, 196, 255, 1)"
   context.stroke()
 }
-// function addBubble() {
-//   NodesID.push({ data: { id: 'el9', label: 'Этап 10', style: 'bubbleSecondary', link: 'https://www.youtube.com/watch?v=O1C_fNlZDAU&t=1490s' }, position: { x: 850, y: 850 } })
-//   console.log(NodesID)
 
-// }
-// function writeMessage(text, posx, posy) {
-//   context.font = '18pt Calibri';
-//   context.fillStyle = 'red';
-//   // context.textAlign = 'center';
-//   context.fillText(text, posx + size / 2, posy+ (size-120) / 2);
-//   console.log(context.fillText)
-// };
 /*------------------------------------*/
 
 // onResize = () => {
@@ -475,26 +404,60 @@ function drawLine(x1, x2, y1, y2) {
 //     onResize();
 
 // отправка данных для ноды, отрефакторить:
+
+async function searchDuplicate(key){
+  for (let item of (await NodesID)) {
+    console.log(item)
+    console.log(key)
+    if (Object.values(item).includes(key)) {
+      console.log('exist')
+      return false
+    }
+    else{
+
+      console.log('notexist')
+      continue
+    }
+ 
+  }
+  console.log('fdf')
+  return true
+}
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
  const value = Object.fromEntries(data.entries());
 //  const response = await addNode(value)
-console.log(event)
-let id =value.id
-let label = value.label
-let style = value.style
-elements[id] = {
-  x: 500,
-  y: 50,
-  startX: 0,
-  startY: 0,
-  label: label,
-  style: style
-}
-let contextAddNode = document.querySelector('.add-node-open');
-contextAddNode.style.display = 'none';
-drawingBubblesAfterEdit()
+
+    let id =value.id
+    let label = value.label
+    let style = value.style
+    elements[id] = {
+      x: 500,
+      y: 50,
+      startX: 0,
+      startY: 0,
+      label: label,
+      style: style
+    }
+    let contextAddNode = document.querySelector('.add-node-open');
+    contextAddNode.style.display = 'none';
+    drawingBubblesAfterEdit()
+
+
+
+
+
+
+
+
+// }
+// else{
+//   console.log('false')
+// }
+
+
+
 }
 
 const form = document.getElementById('addNode');

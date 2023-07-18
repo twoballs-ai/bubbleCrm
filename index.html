@@ -39,7 +39,7 @@
 <canvas></canvas>
 <div class="bubble-menu-open">
   <ul>
-      <li>Редактировать урок</li>
+      <li onclick="onContextEditNode(event);">Редактировать этап</li>
       <li onclick="deleteNode();">Удалить этап</li>
       <li onclick="onContextAddEdge(event);">Соединить этапы</li>
   </ul>
@@ -82,7 +82,7 @@
   <form id="addNode">
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Введите id элемента с ним вы будете соединять узлы и ноды</label>
-      <input type="text" class="form-control" name="id" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <input type="text" class="form-control" name="node_id" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Введите название этапа</label>
@@ -95,6 +95,25 @@
       <option value="bubbleWarning">bubbleWarning</option>
     </select>
     <button type="submit" class="btn btn-primary">Добавить</button>
+  </form>
+</div>
+<div class="edit-node-open">
+  <form id="editNode">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите id элемента с ним вы будете соединять узлы и ноды</label>
+      <input type="text" class="form-control" name="id" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Введите название этапа</label>
+      <input type="text" class="form-control" name="label" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <select class="form-select" aria-label="Пример выбора по умолчанию" name="style">
+      <option selected>Откройте это меню выбора</option>
+      <option value="bubblePrimary">bubblePrimary</option>
+      <option value="bubbleSecondary">bubbleSecondary</option>
+      <option value="bubbleWarning">bubbleWarning</option>
+    </select>
+    <button type="submit" class="btn btn-primary">обновить</button>
   </form>
 </div>
     <div>

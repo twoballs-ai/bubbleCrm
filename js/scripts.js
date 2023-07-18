@@ -44,51 +44,64 @@ function getElementId(elemId) {
 }
 
 
-  async function addNode(value) {
- 
-    console.log(value)
-    const url = 'http://127.0.0.1:8000/api/node-list/1'
-    return await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json;charset=utf-8' },
-      body:  JSON.stringify(value)
-    })
-  }
-  
+async function addNode(value) {
 
-  // async function UpdateBubblesMap(value) {
- 
-  //   console.log(JSON.stringify(value))
-  //   const url = 'http://127.0.0.1:8000/api/node-detail/1/el1'
-  //   // return await fetch(url, {
-  //   //   method: 'PUT',
-  //   //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
-  //   //   body:  JSON.stringify(value)
-  //   // })
-  // }
-  
+  console.log(value)
+  const url = 'http://127.0.0.1:8000/api/node-list/1'
+  return await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    body: JSON.stringify(value)
+  })
+}
+
+
+// async function UpdateBubblesMap(value) {
+
+//   console.log(JSON.stringify(value))
+//   const url = 'http://127.0.0.1:8000/api/node-detail/1/el1'
+//   // return await fetch(url, {
+//   //   method: 'PUT',
+//   //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
+//   //   body:  JSON.stringify(value)
+//   // })
+// }
+
+async function editNode(value) {
+  prevNodeId = value.prevNodeId
+  console.log(value.prevNodeId)
+
+
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  return await fetch(url+prevNodeId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    body: JSON.stringify(value)
+  })
+}
+async function deleteNode(e) {
+  // console.log(elementId)
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  console.log(url)
+
+  return await fetch(url + elementId['elid'], {
+    method: 'DELETE'
+  })
+    .then(console.log('succesful delete'));
+}
 
 async function addEdge(value) {
- 
+
   console.log(value)
   const url = 'http://127.0.0.1:8000/api/edge-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body:  JSON.stringify(value)
+    body: JSON.stringify(value)
   })
 }
 
-async function deleteNode(e) {
-    // console.log(elementId)
-    const url = 'http://127.0.0.1:8000/api/node-detail/1/'
-    console.log(url)
 
-  return await fetch(url+elementId['elid'], {
-    method: 'DELETE'
-  })
-  .then(console.log('succesful delete'));
-}
 
 async function getEdgeList() {
   const url = 'http://127.0.0.1:8000/api/edge-list/1'
@@ -155,14 +168,15 @@ async function drawingBubblesFromServer() {
   for (let items = 0; items < num; items++) {
     // subnodes= NodesID[items]['subnodes']
     //  console.log(await NodesID)
-    
+
     textIntoTheCircle = (await NodesID)[items]['label']
     // console.log(textIntoTheCircle)
     // link = (await NodesID)[items]['link']
     positionX = (await NodesID)[items]['posX']
     positionY = (await NodesID)[items]['posY']
     style = (await NodesID)[items]['style']
-    buttonId = (await NodesID)[items]['id']
+    buttonId = (await NodesID)[items]['node_id']
+    elemId= (await NodesID)[items]['id']
     // создание dom-элемента
     const element = document.createElement('div')
     // const textNode = document.createElement('p');
@@ -178,7 +192,7 @@ async function drawingBubblesFromServer() {
     // console.log(element)
     // тут будут храниться и изменяться все его координаты
     elements[id] = {
-      
+      elemId: elemId,
       x: positionX,
       y: positionY,
       startX: 0,
@@ -190,7 +204,7 @@ async function drawingBubblesFromServer() {
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
-    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
+    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId, elemId:elemId });
   }
   console.log(elements)
   // console.log(Object.keys(elements).length)
@@ -205,7 +219,7 @@ async function drawingBubblesFromServer() {
 //     searchDuplicate(items).then((res)=>{
 //       if (res===true) {
 //         console.log(items)
-    
+
 //     textIntoTheCircle = elements[items]['label']
 //     console.log(textIntoTheCircle)
 //     // link = (await NodesID)[items]['link']
@@ -248,9 +262,9 @@ async function drawingBubblesFromServer() {
 //       }
 
 //     })
-    
+
 //   }
-  
+
 //   // console.log(num)
 //   console.log(elements)
 //   // connect(elements,subelements)
@@ -309,7 +323,8 @@ function onContextBubbleMenu(e) {
   contextBubbleMenuOpen.style.left = e.clientX + 'px';
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
   contextBubbleMenuOpen.style.display = 'block';
-  getElementId(this.buttonId)
+  getElementId(this.elemId)
+  console.log(this)
   window.addEventListener('click', function () {
     contextBubbleMenuOpen.style.display = 'none';
   });
@@ -328,8 +343,19 @@ function onContextMenu(e) {
 
 function onContextAddNode(e) {
   e.preventDefault()
- 
+
   let contextAddNode = document.querySelector('.add-node-open');
+  contextAddNode.style.left = e.clientX + 'px';
+  contextAddNode.style.top = e.clientY + 'px';
+  contextAddNode.style.display = 'block';
+
+}
+
+
+function onContextEditNode(e) {
+  e.preventDefault()
+
+  let contextAddNode = document.querySelector('.edit-node-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
   contextAddNode.style.display = 'block';
@@ -338,7 +364,7 @@ function onContextAddNode(e) {
 
 function onContextAddEdge(e) {
   e.preventDefault()
- 
+
   let contextAddNode = document.querySelector('.add-edge-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
@@ -348,7 +374,7 @@ function onContextAddEdge(e) {
 
 function onContextDeleteEdge(e) {
   e.preventDefault()
- 
+
   let contextAddNode = document.querySelector('.delete-edge-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
@@ -417,28 +443,53 @@ function drawLine(x1, x2, y1, y2) {
 //       console.log('notexist')
 //       continue
 //     }
- 
+
 //   }
 //   console.log('fdf')
 //   return true
 // }
+
+/////////////
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
   data.append('canvas', '1');
   data.append('posX', '500');
   data.append('posY', '50');
- const value = Object.fromEntries(data.entries());
- const response = await addNode(value)
- if (response.status === 200 || response.status === 201){
-  let result = await response.json();
-  console.log(result.id);
-  window.location.reload()
- }
+  const value = Object.fromEntries(data.entries());
+  const response = await addNode(value)
+  if (response.status === 200 || response.status === 201) {
+    let result = await response.json();
+    console.log(result.id);
+    window.location.reload()
+  }
 }
 
 const form = document.getElementById('addNode');
 form.addEventListener('submit', handleSubmit);
+
+//////////////
+async function handleEditNodeSubmit(event) {
+  event.preventDefault();
+  
+ 
+  // console.log(elements[elementId['elid']]['x'])
+  x = elements[elementId['elid']]['x']
+  y = elements[elementId['elid']]['y']
+  console.log(x,y)
+  const data = new FormData(event.target);
+  data.append('canvas', '1');
+  data.append('prevNodeId', elementId['elid']);
+  data.append('posX', x);
+  data.append('posY', y);
+  const value = Object.fromEntries(data.entries());
+  const response = await editNode(value)
+  console.log(event);
+}
+
+const formEditNode = document.getElementById('editNode');
+formEditNode.addEventListener('submit', handleEditNodeSubmit);
+//////////////
 
 
 async function handleAddEdgeSubmit(event) {
@@ -446,37 +497,38 @@ async function handleAddEdgeSubmit(event) {
 
   const data = new FormData(event.target);
   data.append('canvas', '1');
- const value = Object.fromEntries(data.entries());
- const response = await addEdge(value)
+  const value = Object.fromEntries(data.entries());
+  const response = await addEdge(value)
   console.log(data);
 }
 
 const formAddEdge = document.getElementById('addEdge');
 formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 
-
+//////////////
 
 // сохраняем карту шаров
-async function saveMovementBubbles(event){
+async function saveMovementBubbles(event) {
   for (items in elements) {
     console.log(elements[items]['label'])
+    elemID = elements[items]['elemId']
     textIntoTheCircle = elements[items]['label']
     console.log(textIntoTheCircle)
     positionX = elements[items]['x']
     positionY = elements[items]['y']
     style = elements[items]['style']
     buttonId = items
-  const formData = new FormData();
+    const formData = new FormData();
     formData.append('canvas', '1');
     formData.append('posX', positionX)
     formData.append('posY', positionY)
     formData.append('label', textIntoTheCircle)
-    formData.append('id', buttonId)
+    formData.append('node_id', buttonId)
     formData.append('style', style)
-    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/'+buttonId, {
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/' + elemID, {
       method: 'PUT',
       body: formData
-  }).then(response => response.json())
-}
-
+    }).then(response => response.json())
   }
+  window.location.reload()
+}

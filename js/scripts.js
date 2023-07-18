@@ -24,21 +24,6 @@ async function graphModel() {
 }
 
 
-
-
-
-async function handleAddEdgeSubmit(event) {
-  event.preventDefault();
-
-  const data = new FormData(event.target);
-  data.append('canvas', '1');
- const value = Object.fromEntries(data.entries());
- const response = await addEdge(value)
-  console.log(data);
-}
-
-const formAddEdge = document.getElementById('addEdge');
-formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 // function serializeForm(formNode) {
 //   return new FormData(formNode)
 // }
@@ -58,20 +43,20 @@ function getElementId(elemId) {
   console.log(elementId)
 }
 
-function saveAll(){
-  // async function addNode(value) {
+
+  async function addNode(value) {
  
-  //   console.log(value)
-  //   const url = 'http://127.0.0.1:8000/api/node-list/1'
-  //   return await fetch(url, {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-  //     body:  JSON.stringify(value)
-  //   })
-  // }
+    console.log(value)
+    const url = 'http://127.0.0.1:8000/api/node-list/1'
+    return await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      body:  JSON.stringify(value)
+    })
+  }
   
 
-}
+
 
 async function addEdge(value) {
  
@@ -203,64 +188,64 @@ async function drawingBubblesFromServer() {
   connect(elements)
 }
 
-async function drawingBubblesAfterEdit() {
-  // let num = Object.keys(elements).length
+// async function drawingBubblesAfterEdit() {
+//   // let num = Object.keys(elements).length
 
-  for (items in elements) {
-    searchDuplicate(items).then((res)=>{
-      if (res===true) {
-        console.log(items)
+//   for (items in elements) {
+//     searchDuplicate(items).then((res)=>{
+//       if (res===true) {
+//         console.log(items)
     
-    textIntoTheCircle = elements[items]['label']
-    console.log(textIntoTheCircle)
-    // link = (await NodesID)[items]['link']
-    positionX = elements[items]['x']
-    positionY = elements[items]['y']
-    style = elements[items]['style']
-    buttonId = items
-    // создание dom-элемента
-    const element = document.createElement('div')
-    // const textNode = document.createElement('p');
-    element.addEventListener('mousedown', onMouseDown)
-    const id = buttonId
-    element.id = id
-    // console.log(id)
-    // element.setAttribute('href', link);
-    element.className = style;
-    element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
-    document.body.prepend(element)
-    // document.body.prepend(textNode)
-    // console.log(element)
-    // тут будут храниться и изменяться все его координаты
+//     textIntoTheCircle = elements[items]['label']
+//     console.log(textIntoTheCircle)
+//     // link = (await NodesID)[items]['link']
+//     positionX = elements[items]['x']
+//     positionY = elements[items]['y']
+//     style = elements[items]['style']
+//     buttonId = items
+//     // создание dom-элемента
+//     const element = document.createElement('div')
+//     // const textNode = document.createElement('p');
+//     element.addEventListener('mousedown', onMouseDown)
+//     const id = buttonId
+//     element.id = id
+//     // console.log(id)
+//     // element.setAttribute('href', link);
+//     element.className = style;
+//     element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
+//     document.body.prepend(element)
+//     // document.body.prepend(textNode)
+//     // console.log(element)
+//     // тут будут храниться и изменяться все его координаты
 
-    console.log(element)
-    elements[id] = {
-      x: positionX,
-      y: positionY,
-      startX: 0,
-      startY: 0,
-      label: textIntoTheCircle,
-      style: style
-    }
+//     console.log(element)
+//     elements[id] = {
+//       x: positionX,
+//       y: positionY,
+//       startX: 0,
+//       startY: 0,
+//       label: textIntoTheCircle,
+//       style: style
+//     }
 
-    // начальное положение
-    translate(element, elements[id].x, elements[id].y)
-    // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
-    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
-      }
-      else{
-        console.log('ошибка')
-      }
+//     // начальное положение
+//     translate(element, elements[id].x, elements[id].y)
+//     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
+//     element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
+//       }
+//       else{
+//         console.log('ошибка')
+//       }
 
-    })
+//     })
     
-  }
+//   }
   
-  // console.log(num)
-  console.log(elements)
-  // connect(elements,subelements)
-  connect(elements)
-}
+//   // console.log(num)
+//   console.log(elements)
+//   // connect(elements,subelements)
+//   connect(elements)
+// }
 
 function clickBubbles(event) {
   console.log('чмошник')
@@ -294,7 +279,8 @@ function onMouseMove(e) {
   // console.log(current)
   translate(current, x, y)
   connect(elements)
-
+  console.log(elements);
+  console.log('mouse onMove');
 }
 
 function onMouseUp() {
@@ -405,62 +391,52 @@ function drawLine(x1, x2, y1, y2) {
 
 // отправка данных для ноды, отрефакторить:
 
-async function searchDuplicate(key){
-  for (let item of (await NodesID)) {
-    console.log(item)
-    console.log(key)
-    if (Object.values(item).includes(key)) {
-      console.log('exist')
-      return false
-    }
-    else{
+// async function searchDuplicate(key){
+//   for (let item of (await NodesID)) {
+//     console.log(item)
+//     console.log(key)
+//     if (Object.values(item).includes(key)) {
+//       console.log('exist')
+//       return false
+//     }
+//     else{
 
-      console.log('notexist')
-      continue
-    }
+//       console.log('notexist')
+//       continue
+//     }
  
-  }
-  console.log('fdf')
-  return true
-}
+//   }
+//   console.log('fdf')
+//   return true
+// }
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
+  data.append('canvas', '1');
+  data.append('posX', '500');
+  data.append('posY', '50');
  const value = Object.fromEntries(data.entries());
-//  const response = await addNode(value)
-
-    let id =value.id
-    let label = value.label
-    let style = value.style
-    elements[id] = {
-      x: 500,
-      y: 50,
-      startX: 0,
-      startY: 0,
-      label: label,
-      style: style
-    }
-    let contextAddNode = document.querySelector('.add-node-open');
-    contextAddNode.style.display = 'none';
-    drawingBubblesAfterEdit()
-
-
-
-
-
-
-
-
-// }
-// else{
-//   console.log('false')
-// }
-
-
-
+ const response = await addNode(value)
+ if (response.status === 200 || response.status === 201){
+  let result = await response.json();
+  console.log(result.id);
+  window.location.reload()
+ }
 }
 
 const form = document.getElementById('addNode');
 form.addEventListener('submit', handleSubmit);
 
 
+async function handleAddEdgeSubmit(event) {
+  event.preventDefault();
+
+  const data = new FormData(event.target);
+  data.append('canvas', '1');
+ const value = Object.fromEntries(data.entries());
+ const response = await addEdge(value)
+  console.log(data);
+}
+
+const formAddEdge = document.getElementById('addEdge');
+formAddEdge.addEventListener('submit', handleAddEdgeSubmit);

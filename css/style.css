@@ -307,3 +307,10 @@ top: 35%;
 .delete-edge-open ul li:hover {
   background-color: #BFE2FF;
 }
+
+#circles-map-card {
+  /* display: none; */
+  justify-content: center;
+  position: relative;
+  z-index: 99999;
+}

@@ -56,7 +56,17 @@ function getElementId(elemId) {
   }
   
 
-
+  // async function UpdateBubblesMap(value) {
+ 
+  //   console.log(JSON.stringify(value))
+  //   const url = 'http://127.0.0.1:8000/api/node-detail/1/el1'
+  //   // return await fetch(url, {
+  //   //   method: 'PUT',
+  //   //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  //   //   body:  JSON.stringify(value)
+  //   // })
+  // }
+  
 
 async function addEdge(value) {
  
@@ -247,6 +257,8 @@ async function drawingBubblesFromServer() {
 //   connect(elements)
 // }
 
+
+
 function clickBubbles(event) {
   console.log('чмошник')
   console.log(this.link)
@@ -279,8 +291,9 @@ function onMouseMove(e) {
   // console.log(current)
   translate(current, x, y)
   connect(elements)
-  console.log(elements);
-  console.log('mouse onMove');
+  // console.log(elements);
+  // console.log('mouse onMove');
+
 }
 
 function onMouseUp() {
@@ -440,3 +453,30 @@ async function handleAddEdgeSubmit(event) {
 
 const formAddEdge = document.getElementById('addEdge');
 formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
+
+
+
+// сохраняем карту шаров
+async function saveMovementBubbles(event){
+  for (items in elements) {
+    console.log(elements[items]['label'])
+    textIntoTheCircle = elements[items]['label']
+    console.log(textIntoTheCircle)
+    positionX = elements[items]['x']
+    positionY = elements[items]['y']
+    style = elements[items]['style']
+    buttonId = items
+  const formData = new FormData();
+    formData.append('canvas', '1');
+    formData.append('posX', positionX)
+    formData.append('posY', positionY)
+    formData.append('label', textIntoTheCircle)
+    formData.append('id', buttonId)
+    formData.append('style', style)
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/'+buttonId, {
+      method: 'PUT',
+      body: formData
+  }).then(response => response.json())
+}
+
+  }

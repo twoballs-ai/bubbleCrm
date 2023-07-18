@@ -38,8 +38,9 @@ async function graphModel() {
 // const applicantForm = document.getElementById('add-node')
 // applicantForm.addEventListener('submit', handleAddNodeFormSubmit)
 // console.log('Отправка!')
-function getElementId(elemId) {
+function getElementId(elemId, buttonId) {
   elementId.elid = elemId
+  elementId.butid = buttonId
   console.log(elementId)
 }
 
@@ -69,15 +70,15 @@ async function addNode(value) {
 
 async function editNode(value) {
   prevNodeId = value.prevNodeId
-  console.log(value.prevNodeId)
+  console.log(value)
 
 
-  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
-  return await fetch(url+prevNodeId, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify(value)
-  })
+  // const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  // return await fetch(url+prevNodeId, {
+  //   method: 'PUT',
+  //   headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  //   body: JSON.stringify(value)
+  // })
 }
 async function deleteNode(e) {
   // console.log(elementId)
@@ -323,7 +324,7 @@ function onContextBubbleMenu(e) {
   contextBubbleMenuOpen.style.left = e.clientX + 'px';
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
   contextBubbleMenuOpen.style.display = 'block';
-  getElementId(this.elemId)
+  getElementId(this.elemId, this.buttonId)
   console.log(this)
   window.addEventListener('click', function () {
     contextBubbleMenuOpen.style.display = 'none';
@@ -455,7 +456,7 @@ async function handleSubmit(event) {
   const data = new FormData(event.target);
   data.append('canvas', '1');
   data.append('posX', '500');
-  data.append('posY', '50');
+  data.append('posY', '70');
   const value = Object.fromEntries(data.entries());
   const response = await addNode(value)
   if (response.status === 200 || response.status === 201) {
@@ -473,13 +474,13 @@ async function handleEditNodeSubmit(event) {
   event.preventDefault();
   
  
-  // console.log(elements[elementId['elid']]['x'])
-  x = elements[elementId['elid']]['x']
-  y = elements[elementId['elid']]['y']
+  console.log(elements[elementId['butid']])
+  x = elements[elementId['butid']]['x']
+  y = elements[elementId['butid']]['y']
   console.log(x,y)
   const data = new FormData(event.target);
   data.append('canvas', '1');
-  data.append('prevNodeId', elementId['elid']);
+  data.append('prevNodeId', elementId['butid']);
   data.append('posX', x);
   data.append('posY', y);
   const value = Object.fromEntries(data.entries());

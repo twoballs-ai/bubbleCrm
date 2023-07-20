@@ -14,7 +14,7 @@ let numBubbles = 0
 
 
 async function graphModel() {
-  const url = 'http://127.0.0.1:8000/api/canvas/10'
+  const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -48,7 +48,7 @@ function getElementId(elemId, buttonId) {
 async function addNode(value) {
 
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-list/10'
+  const url = 'http://127.0.0.1:8000/api/node-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -73,7 +73,7 @@ async function editNode(value) {
   console.log(value)
 
 
-  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
   return await fetch(url+id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -82,7 +82,7 @@ async function editNode(value) {
 }
 async function deleteNode(e) {
   // console.log(elementId)
-  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
   console.log(url)
 
   return await fetch(url + elementId['elid'], {
@@ -94,7 +94,7 @@ async function deleteNode(e) {
 async function addEdge(value) {
 
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/edge-list/10'
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -105,7 +105,7 @@ async function addEdge(value) {
 
 
 async function getEdgeList() {
-  const url = 'http://127.0.0.1:8000/api/edge-list/10'
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -149,16 +149,16 @@ async function listNodes() {
   return itemsNodesID
 }
 async function listEdges() {
-  let circles = await graphModel()
+  let circles = await getEdgeList()
   let itemsEdgesID = []
-  const edgesValues = circles['edges']
+  const edgesValues = circles
   const listingEdges = () => {
     edgesValues.forEach(function (item, index, arr) {
       itemsEdgesID.push(item)
     });
   }
   listingEdges()
-  // console.log(itemsEdgesID)
+  console.log(itemsEdgesID)
   return itemsEdgesID
 }
 
@@ -392,17 +392,28 @@ function translate(el, x, y) {
 async function connect(elements) {
 
   const subedges = (await EdgesId).length
-  // console.log(EdgesId)
+  console.log(subedges)
   for (let i = 0; i < subedges; i++) {
-    source = (await EdgesId)[i].source
-    target = (await EdgesId)[i].target
-
-    drawLine(
+    source = (await EdgesId)[i].source.node_id
+    target = (await EdgesId)[i].target.node_id
+    console.log(source, target)
+    console.log(elements[source],elements[target])
+    if(typeof elements[source] !== 'undefined' && typeof elements[target] !== 'undefined'){
+      console.log(elements[source],elements[target])
+          drawLine(
       elements[source].x,
       elements[target].x,
       elements[source].y,
       elements[target].y
     )
+    }
+// console.log(elements[source],elements[target])
+    // drawLine(
+    //   elements[source].x,
+    //   elements[target].x,
+    //   elements[source].y,
+    //   elements[target].y
+    // )
   }
 }
 
@@ -454,7 +465,7 @@ function drawLine(x1, x2, y1, y2) {
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   data.append('posX', '500');
   data.append('posY', '70');
   const value = Object.fromEntries(data.entries());
@@ -479,7 +490,7 @@ async function handleEditNodeSubmit(event) {
   y = elements[elementId['butid']]['y']
   console.log(x,y)
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   data.append('prevNodeId', elementId['butid']);
   data.append('id', elementId['elid']);
   data.append('posX', x);
@@ -498,10 +509,15 @@ async function handleAddEdgeSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   const value = Object.fromEntries(data.entries());
-  const response = await addEdge(value)
-  console.log(data);
+  source = elements[value['source']]['elemId']
+  target = elements[value['target']]['elemId']
+  data.set('source', source);
+  data.set('target', target);
+  const edit = Object.fromEntries(data.entries());
+  const response = await addEdge(edit)
+  // console.log(source);
 }
 
 const formAddEdge = document.getElementById('addEdge');
@@ -521,13 +537,13 @@ async function saveMovementBubbles(event) {
     style = elements[items]['style']
     buttonId = items
     const formData = new FormData();
-    formData.append('canvas', '10');
+    formData.append('canvas', '1');
     formData.append('posX', positionX)
     formData.append('posY', positionY)
     formData.append('label', textIntoTheCircle)
     formData.append('node_id', buttonId)
     formData.append('style', style)
-    const response = await fetch('http://127.0.0.1:8000/api/node-detail/10/' + elemID, {
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/' + elemID, {
       method: 'PUT',
       body: formData
     }).then(response => response.json())

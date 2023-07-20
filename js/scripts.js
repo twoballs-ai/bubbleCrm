@@ -503,8 +503,7 @@ async function handleEditNodeSubmit(event) {
 const formEditNode = document.getElementById('editNode');
 formEditNode.addEventListener('submit', handleEditNodeSubmit);
 //////////////
-
-
+// добавление узлов
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
 

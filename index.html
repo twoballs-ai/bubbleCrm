@@ -42,7 +42,7 @@
       <li onclick="onContextEditNode(event);">Редактировать этап</li>
       <li onclick="deleteNode();">Удалить этап</li>
       <li onclick="onContextAddEdge(event);">Связать этапы</li>
-      <li onclick="onContextDeleteEdge(event);">Удалить связь</li>
+      <li onclick="onContextDeleteEdge(event);">Удалить связь c элементом</li>
   </ul>
 </div>
 <div class="context-menu-open">
@@ -69,11 +69,9 @@
 <!-- удаление узла -->
 <div class="delete-edge-open">
   <form id="delEdge">
-    <select class="form-select" name="edges" aria-label="Default select example">
+    <select class="delete-edge-select" name="edges" aria-label="Default select example">
       <option selected>выберите узел для его удаления</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
+  
     </select>
     <button type="submit" class="btn btn-danger">удалить узел</button>
   </form>

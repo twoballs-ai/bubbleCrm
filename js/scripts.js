@@ -11,9 +11,11 @@ const newElements = {}
 const EdgesId = listEdges()
 let elementId = {}
 let numBubbles = 0
-
+// const pageId = 1
 
 async function graphModel() {
+  
+  console.log()
   const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
     let res = await fetch(url);
@@ -112,6 +114,16 @@ async function getEdgeList() {
   } catch (error) {
     console.log(error);
   }
+}
+
+async function deleteEdge(value) {
+  console.log(value.edges)
+  const url = 'http://127.0.0.1:8000/api/edge-detail/1/'
+  // console.log(url)
+  return await fetch(url+value.edges, {
+    method: 'DELETE'
+  })
+
 }
 
 
@@ -325,7 +337,7 @@ function onContextBubbleMenu(e) {
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
   contextBubbleMenuOpen.style.display = 'block';
   getElementId(this.elemId, this.buttonId)
-  console.log(this)
+  // console.log(this)
   window.addEventListener('click', function () {
     contextBubbleMenuOpen.style.display = 'none';
   });
@@ -373,9 +385,22 @@ function onContextAddEdge(e) {
   console.log('edge')
 }
 
-function onContextDeleteEdge(e) {
+// функция вызова меню удаления узла.
+async function onContextDeleteEdge(e) {
   e.preventDefault()
-
+  const selectElement = document.querySelector('.delete-edge-select');
+  // let selectElement = document.getElementById('ageselect');
+  console.log(elementId['butid'])
+  const subedges = (await EdgesId).length
+  for (let i = 0; i < subedges; i++) {
+    source = (await EdgesId)[i].source.node_id
+    target = (await EdgesId)[i].target.node_id
+    connectionID = (await EdgesId)[i]
+    if(source === elementId['butid']|| target === elementId['butid']){
+      console.log(connectionID.id)
+      selectElement.add(new Option(`${connectionID.source.node_id}-${connectionID.target.node_id}`, connectionID.id));
+    }
+  }
   let contextAddNode = document.querySelector('.delete-edge-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
@@ -392,14 +417,14 @@ function translate(el, x, y) {
 async function connect(elements) {
 
   const subedges = (await EdgesId).length
-  console.log(subedges)
+  // console.log(subedges)
   for (let i = 0; i < subedges; i++) {
     source = (await EdgesId)[i].source.node_id
     target = (await EdgesId)[i].target.node_id
-    console.log(source, target)
-    console.log(elements[source],elements[target])
+    // console.log(source, target)
+    // console.log(elements[source],elements[target])
     if(typeof elements[source] !== 'undefined' && typeof elements[target] !== 'undefined'){
-      console.log(elements[source],elements[target])
+      // console.log(elements[source],elements[target])
           drawLine(
       elements[source].x,
       elements[target].x,
@@ -472,7 +497,8 @@ async function handleSubmit(event) {
   const response = await addNode(value)
   if (response.status === 200 || response.status === 201) {
     let result = await response.json();
-    console.log(result.id);
+    console.log(result);
+    // console.log('.[[ee')
     window.location.reload()
   }
 }
@@ -516,7 +542,13 @@ async function handleAddEdgeSubmit(event) {
   data.set('target', target);
   const edit = Object.fromEntries(data.entries());
   const response = await addEdge(edit)
-  // console.log(source);
+  if (response.status === 200 || response.status === 201) {
+    let result = await response.json();
+    console.log(result);
+    // console.log('.[[ee')
+    window.location.reload()
+  }
+  
 }
 
 const formAddEdge = document.getElementById('addEdge');
@@ -524,6 +556,28 @@ formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 
 //////////////
 
+
+/////////////
+async function handleDeleteEdgeSubmit(event) {
+  event.preventDefault();
+
+  const data = new FormData(event.target);
+  data.append('canvas', '1');
+  const value = Object.fromEntries(data.entries());
+
+
+  const response = await deleteEdge(value)
+  if (response.status === 200 || response.status === 204) {
+    // let result = await response.json();
+    // console.log(result);
+    // console.log('.[[ee')
+    window.location.reload()
+  }
+}
+
+const formDeleteEdge = document.getElementById('delEdge');
+formDeleteEdge.addEventListener('submit', handleDeleteEdgeSubmit);
+////////////
 // сохраняем карту шаров
 async function saveMovementBubbles(event) {
   for (items in elements) {

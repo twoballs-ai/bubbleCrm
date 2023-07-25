@@ -14,9 +14,8 @@ let numBubbles = 0
 // const pageId = 1
 
 async function graphModel() {
-  
   console.log()
-  const url = 'http://127.0.0.1:8000/api/canvas/1'
+  const url = 'http://127.0.0.1:8000/api/canvas/10'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -24,7 +23,6 @@ async function graphModel() {
     console.log(error);
   }
 }
-
 
 // function serializeForm(formNode) {
 //   return new FormData(formNode)
@@ -44,20 +42,17 @@ function getElementId(elemId, buttonId) {
   elementId.elid = elemId
   elementId.butid = buttonId
   console.log(elementId)
+  return elementId.elid 
 }
-
-
 async function addNode(value) {
-
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-list/1'
+  const url = 'http://127.0.0.1:8000/api/node-list/10'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     body: JSON.stringify(value)
   })
 }
-
 
 // async function UpdateBubblesMap(value) {
 
@@ -69,13 +64,10 @@ async function addNode(value) {
 //   //   body:  JSON.stringify(value)
 //   // })
 // }
-
 async function editNode(value) {
   id = value.id
   console.log(value)
-
-
-  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
   return await fetch(url+id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -84,30 +76,24 @@ async function editNode(value) {
 }
 async function deleteNode(e) {
   // console.log(elementId)
-  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
   console.log(url)
-
   return await fetch(url + elementId['elid'], {
     method: 'DELETE'
   })
     .then(console.log('succesful delete'));
 }
-
 async function addEdge(value) {
-
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  const url = 'http://127.0.0.1:8000/api/edge-list/10'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     body: JSON.stringify(value)
   })
 }
-
-
-
 async function getEdgeList() {
-  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  const url = 'http://127.0.0.1:8000/api/edge-list/10'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -115,18 +101,14 @@ async function getEdgeList() {
     console.log(error);
   }
 }
-
 async function deleteEdge(value) {
   console.log(value.edges)
-  const url = 'http://127.0.0.1:8000/api/edge-detail/1/'
+  const url = 'http://127.0.0.1:8000/api/edge-detail/10/'
   // console.log(url)
   return await fetch(url+value.edges, {
     method: 'DELETE'
   })
-
 }
-
-
 // функция отрисовки рендеринга страниц, и рендеринга ссылок. 
 function draw() {
   const TextBody = document.createElement('div')
@@ -138,14 +120,11 @@ function draw() {
   // connectSubAndParent(subelements, elements[parentId])
   // console.log(elements['el7'])
 }
-
-
 async function listNodes() {
   // graphModel().then(bubbles => {
   //   console.log(bubbles) // fetched movies
   // });
   let circles = await graphModel()
-
   // const graph = graphModel()
   // console.log(circles)
   let itemsNodesID = []
@@ -173,7 +152,6 @@ async function listEdges() {
   console.log(itemsEdgesID)
   return itemsEdgesID
 }
-
 // функция рисования шаров
 async function drawingBubblesFromServer() {
   let num = (await NodesID).length
@@ -181,7 +159,6 @@ async function drawingBubblesFromServer() {
   for (let items = 0; items < num; items++) {
     // subnodes= NodesID[items]['subnodes']
     //  console.log(await NodesID)
-
     textIntoTheCircle = (await NodesID)[items]['label']
     // console.log(textIntoTheCircle)
     // link = (await NodesID)[items]['link']
@@ -213,7 +190,6 @@ async function drawingBubblesFromServer() {
       label: textIntoTheCircle,
       style: style
     }
-
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
@@ -284,8 +260,6 @@ async function drawingBubblesFromServer() {
 //   connect(elements)
 // }
 
-
-
 function clickBubbles(event) {
   console.log('чмошник')
   console.log(this.link)
@@ -308,7 +282,6 @@ function onMouseDown(e) {
   } else if (e.which == 3) {
     // console.log('hui')
   }
-
 }
 
 function onMouseMove(e) {
@@ -320,7 +293,6 @@ function onMouseMove(e) {
   connect(elements)
   // console.log(elements);
   // console.log('mouse onMove');
-
 }
 
 function onMouseUp() {
@@ -356,18 +328,14 @@ function onContextMenu(e) {
 
 function onContextAddNode(e) {
   e.preventDefault()
-
   let contextAddNode = document.querySelector('.add-node-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
   contextAddNode.style.display = 'block';
-
 }
-
 
 function onContextEditNode(e) {
   e.preventDefault()
-
   let contextAddNode = document.querySelector('.edit-node-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
@@ -377,7 +345,6 @@ function onContextEditNode(e) {
 
 function onContextAddEdge(e) {
   e.preventDefault()
-
   let contextAddNode = document.querySelector('.add-edge-open');
   contextAddNode.style.left = e.clientX + 'px';
   contextAddNode.style.top = e.clientY + 'px';
@@ -409,13 +376,18 @@ async function onContextDeleteEdge(e) {
 }
 
 
+function onContextAddLesson(e) {
+  e.preventDefault()
+  window.location.href = 'lessonEdit/lesson.html';
+}
+
+
 function translate(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`
   // console.log(el,x,y)
 }
 
 async function connect(elements) {
-
   const subedges = (await EdgesId).length
   // console.log(subedges)
   for (let i = 0; i < subedges; i++) {
@@ -441,7 +413,6 @@ async function connect(elements) {
     // )
   }
 }
-
 function drawLine(x1, x2, y1, y2) {
   context.beginPath()
   // из центра квадрата
@@ -490,7 +461,7 @@ function drawLine(x1, x2, y1, y2) {
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  data.append('canvas', '10');
   data.append('posX', '500');
   data.append('posY', '70');
   const value = Object.fromEntries(data.entries());
@@ -505,18 +476,15 @@ async function handleSubmit(event) {
 
 const form = document.getElementById('addNode');
 form.addEventListener('submit', handleSubmit);
-
 //////////////
 async function handleEditNodeSubmit(event) {
   event.preventDefault();
-  
- 
   console.log(elements[elementId['butid']])
   x = elements[elementId['butid']]['x']
   y = elements[elementId['butid']]['y']
   console.log(x,y)
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  data.append('canvas', '10');
   data.append('prevNodeId', elementId['butid']);
   data.append('id', elementId['elid']);
   data.append('posX', x);
@@ -532,9 +500,8 @@ formEditNode.addEventListener('submit', handleEditNodeSubmit);
 // добавление узлов
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
-
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  data.append('canvas', '10');
   const value = Object.fromEntries(data.entries());
   source = elements[value['source']]['elemId']
   target = elements[value['target']]['elemId']
@@ -548,24 +515,17 @@ async function handleAddEdgeSubmit(event) {
     // console.log('.[[ee')
     window.location.reload()
   }
-  
 }
 
 const formAddEdge = document.getElementById('addEdge');
 formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
-
-//////////////
-
-
+/////////////
 /////////////
 async function handleDeleteEdgeSubmit(event) {
   event.preventDefault();
-
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  data.append('canvas', '10');
   const value = Object.fromEntries(data.entries());
-
-
   const response = await deleteEdge(value)
   if (response.status === 200 || response.status === 204) {
     // let result = await response.json();
@@ -590,13 +550,13 @@ async function saveMovementBubbles(event) {
     style = elements[items]['style']
     buttonId = items
     const formData = new FormData();
-    formData.append('canvas', '1');
+    formData.append('canvas', '10');
     formData.append('posX', positionX)
     formData.append('posY', positionY)
     formData.append('label', textIntoTheCircle)
     formData.append('node_id', buttonId)
     formData.append('style', style)
-    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/' + elemID, {
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/10/' + elemID, {
       method: 'PUT',
       body: formData
     }).then(response => response.json())

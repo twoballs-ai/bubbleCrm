@@ -15,7 +15,7 @@ let numBubbles = 0
 
 async function graphModel() {
   console.log()
-  const url = 'http://127.0.0.1:8000/api/canvas/10'
+  const url = 'http://127.0.0.1:8000/api/canvas/1'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -46,7 +46,7 @@ function getElementId(elemId, buttonId) {
 }
 async function addNode(value) {
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-list/10'
+  const url = 'http://127.0.0.1:8000/api/node-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -67,7 +67,7 @@ async function addNode(value) {
 async function editNode(value) {
   id = value.id
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
   return await fetch(url+id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -76,7 +76,7 @@ async function editNode(value) {
 }
 async function deleteNode(e) {
   // console.log(elementId)
-  const url = 'http://127.0.0.1:8000/api/node-detail/10/'
+  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
   console.log(url)
   return await fetch(url + elementId['elid'], {
     method: 'DELETE'
@@ -85,7 +85,7 @@ async function deleteNode(e) {
 }
 async function addEdge(value) {
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/edge-list/10'
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -93,7 +93,7 @@ async function addEdge(value) {
   })
 }
 async function getEdgeList() {
-  const url = 'http://127.0.0.1:8000/api/edge-list/10'
+  const url = 'http://127.0.0.1:8000/api/edge-list/1'
   try {
     let res = await fetch(url);
     return await res.json();
@@ -461,7 +461,7 @@ function drawLine(x1, x2, y1, y2) {
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   data.append('posX', '500');
   data.append('posY', '70');
   const value = Object.fromEntries(data.entries());
@@ -484,7 +484,7 @@ async function handleEditNodeSubmit(event) {
   y = elements[elementId['butid']]['y']
   console.log(x,y)
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   data.append('prevNodeId', elementId['butid']);
   data.append('id', elementId['elid']);
   data.append('posX', x);
@@ -501,7 +501,7 @@ formEditNode.addEventListener('submit', handleEditNodeSubmit);
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   const value = Object.fromEntries(data.entries());
   source = elements[value['source']]['elemId']
   target = elements[value['target']]['elemId']
@@ -524,7 +524,7 @@ formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 async function handleDeleteEdgeSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '10');
+  data.append('canvas', '1');
   const value = Object.fromEntries(data.entries());
   const response = await deleteEdge(value)
   if (response.status === 200 || response.status === 204) {
@@ -550,13 +550,13 @@ async function saveMovementBubbles(event) {
     style = elements[items]['style']
     buttonId = items
     const formData = new FormData();
-    formData.append('canvas', '10');
+    formData.append('canvas', '1');
     formData.append('posX', positionX)
     formData.append('posY', positionY)
     formData.append('label', textIntoTheCircle)
     formData.append('node_id', buttonId)
     formData.append('style', style)
-    const response = await fetch('http://127.0.0.1:8000/api/node-detail/10/' + elemID, {
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/' + elemID, {
       method: 'PUT',
       body: formData
     }).then(response => response.json())

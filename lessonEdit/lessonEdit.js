@@ -5,7 +5,7 @@ const editor = new EditorJS({
    * Id of Element that should contain the Editor 
    */ 
   holder: 'editorjs', 
-
+  placeholder: 'Начните вводить текст или вставьте ссылку',
   tools: { 
     header: Header, 
     list: List,
@@ -19,4 +19,5 @@ const editor = new EditorJS({
         }
       },
   }, 
+  // autofocus: true
 })

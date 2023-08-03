@@ -11,17 +11,27 @@ const newElements = {}
 const EdgesId = listEdges()
 let elementId = {}
 let numBubbles = 0
-// const pageId = 1
+
+async function canvas_page() {
+
+  // const name = await 1;
+
+  return 1
+}
+
 
 async function graphModel() {
-  console.log()
-  const url = 'http://127.0.0.1:8000/api/canvas/1'
+  let canvas_id = await canvas_page();
+  
+  const url = 'http://127.0.0.1:8000/api/canvas/'+canvas_id
+  console.log(url)
   try {
     let res = await fetch(url);
     return await res.json();
   } catch (error) {
     console.log(error);
   }
+  
 }
 
 // function serializeForm(formNode) {
@@ -38,15 +48,17 @@ async function graphModel() {
 // const applicantForm = document.getElementById('add-node')
 // applicantForm.addEventListener('submit', handleAddNodeFormSubmit)
 // console.log('Отправка!')
-function getElementId(elemId, buttonId) {
+function getElementId(elemId, buttonId, textIntoTheCircle) {
   elementId.elid = elemId
   elementId.butid = buttonId
+  elementId.lesson_id = textIntoTheCircle
   console.log(elementId)
   return elementId.elid 
 }
 async function addNode(value) {
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-list/1'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/node-list/'+canvas_id
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -67,7 +79,8 @@ async function addNode(value) {
 async function editNode(value) {
   id = value.id
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/node-detail/'+canvas_id+'/'
   return await fetch(url+id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -76,7 +89,8 @@ async function editNode(value) {
 }
 async function deleteNode(e) {
   // console.log(elementId)
-  const url = 'http://127.0.0.1:8000/api/node-detail/1/'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/node-detail/'+canvas_id+'/'
   console.log(url)
   return await fetch(url + elementId['elid'], {
     method: 'DELETE'
@@ -85,7 +99,8 @@ async function deleteNode(e) {
 }
 async function addEdge(value) {
   console.log(value)
-  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/edge-list/'+canvas_id
   return await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -93,7 +108,8 @@ async function addEdge(value) {
   })
 }
 async function getEdgeList() {
-  const url = 'http://127.0.0.1:8000/api/edge-list/1'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/edge-list/'+canvas_id
   try {
     let res = await fetch(url);
     return await res.json();
@@ -103,11 +119,13 @@ async function getEdgeList() {
 }
 async function deleteEdge(value) {
   console.log(value.edges)
-  const url = 'http://127.0.0.1:8000/api/edge-detail/10/'
+  let canvas_id = await canvas_page();
+  const url = 'http://127.0.0.1:8000/api/edge-detail/'+canvas_id+'/'
   // console.log(url)
   return await fetch(url+value.edges, {
     method: 'DELETE'
   })
+
 }
 // функция отрисовки рендеринга страниц, и рендеринга ссылок. 
 function draw() {
@@ -193,7 +211,7 @@ async function drawingBubblesFromServer() {
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
-    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId, elemId:elemId });
+    element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId, elemId:elemId, textIntoTheCircle:textIntoTheCircle });
   }
   console.log(elements)
   // console.log(Object.keys(elements).length)
@@ -308,8 +326,8 @@ function onContextBubbleMenu(e) {
   contextBubbleMenuOpen.style.left = e.clientX + 'px';
   contextBubbleMenuOpen.style.top = e.clientY + 'px';
   contextBubbleMenuOpen.style.display = 'block';
-  getElementId(this.elemId, this.buttonId)
-  // console.log(this)
+  getElementId(this.elemId, this.buttonId, this.textIntoTheCircle)
+  console.log(this)
   window.addEventListener('click', function () {
     contextBubbleMenuOpen.style.display = 'none';
   });
@@ -378,7 +396,12 @@ async function onContextDeleteEdge(e) {
 
 function onContextAddLesson(e) {
   e.preventDefault()
+  let lesson_id = elementId['elid']
+  let title = elementId['lesson_id']
+  localStorage.setItem('lesson_id', lesson_id);
+  localStorage.setItem('title', title);
   window.location.href = 'lessonEdit/lesson.html';
+
 }
 
 
@@ -461,7 +484,8 @@ function drawLine(x1, x2, y1, y2) {
 async function handleSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  let canvas_id = await canvas_page();
+  data.append('canvas', canvas_id);
   data.append('posX', '500');
   data.append('posY', '70');
   const value = Object.fromEntries(data.entries());
@@ -482,9 +506,11 @@ async function handleEditNodeSubmit(event) {
   console.log(elements[elementId['butid']])
   x = elements[elementId['butid']]['x']
   y = elements[elementId['butid']]['y']
+  
   console.log(x,y)
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  let canvas_id = await canvas_page();
+  data.append('canvas', canvas_id);
   data.append('prevNodeId', elementId['butid']);
   data.append('id', elementId['elid']);
   data.append('posX', x);
@@ -501,7 +527,8 @@ formEditNode.addEventListener('submit', handleEditNodeSubmit);
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  let canvas_id = await canvas_page();
+  data.append('canvas', canvas_id);
   const value = Object.fromEntries(data.entries());
   source = elements[value['source']]['elemId']
   target = elements[value['target']]['elemId']
@@ -524,7 +551,8 @@ formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
 async function handleDeleteEdgeSubmit(event) {
   event.preventDefault();
   const data = new FormData(event.target);
-  data.append('canvas', '1');
+  let canvas_id = await canvas_page();
+  data.append('canvas', canvas_id);
   const value = Object.fromEntries(data.entries());
   const response = await deleteEdge(value)
   if (response.status === 200 || response.status === 204) {
@@ -540,6 +568,7 @@ formDeleteEdge.addEventListener('submit', handleDeleteEdgeSubmit);
 ////////////
 // сохраняем карту шаров
 async function saveMovementBubbles(event) {
+  let canvas_id = await canvas_page();
   for (items in elements) {
     console.log(elements[items]['label'])
     elemID = elements[items]['elemId']
@@ -550,13 +579,13 @@ async function saveMovementBubbles(event) {
     style = elements[items]['style']
     buttonId = items
     const formData = new FormData();
-    formData.append('canvas', '1');
+    formData.append('canvas', canvas_id);
     formData.append('posX', positionX)
     formData.append('posY', positionY)
     formData.append('label', textIntoTheCircle)
     formData.append('node_id', buttonId)
     formData.append('style', style)
-    const response = await fetch('http://127.0.0.1:8000/api/node-detail/1/' + elemID, {
+    const response = await fetch('http://127.0.0.1:8000/api/node-detail/'+canvas_id+'/' + elemID, {
       method: 'PUT',
       body: formData
     }).then(response => response.json())

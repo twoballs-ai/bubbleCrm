@@ -316,6 +316,8 @@ function onMouseMove(e) {
 function onMouseUp() {
   document.body.removeEventListener('mousemove', onMouseMove)
   document.body.removeEventListener('mouseup', onMouseUp)
+  console.log('отпустил мышь')
+  saveMovementBubbles()
 }
 // меню для шаров
 function onContextBubbleMenu(e) {
@@ -590,5 +592,6 @@ async function saveMovementBubbles(event) {
       body: formData
     }).then(response => response.json())
   }
-  window.location.reload()
+  // window.location.reload()
 }
+

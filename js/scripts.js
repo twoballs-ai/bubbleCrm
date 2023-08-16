@@ -64,6 +64,7 @@ async function addNode(value) {
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     body: JSON.stringify(value)
   })
+  
 }
 
 // async function UpdateBubblesMap(value) {
@@ -95,7 +96,7 @@ async function deleteNode(e) {
   return await fetch(url + elementId['elid'], {
     method: 'DELETE'
   })
-    .then(console.log('succesful delete'));
+    .then(window.location.reload());
 }
 async function addEdge(value) {
   console.log(value)
@@ -494,9 +495,19 @@ async function handleSubmit(event) {
   const response = await addNode(value)
   if (response.status === 200 || response.status === 201) {
     let result = await response.json();
-    console.log(result);
-    // console.log('.[[ee')
-    window.location.reload()
+    const url = 'http://127.0.0.1:8000/api/post-list/'+canvas_id
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      body: JSON.stringify({
+          canvas:canvas_id,
+          node:result.id,
+          post_blocks: []
+
+      })
+    }).then( (response) => { 
+console.log(response)});
+    // window.location.reload()
   }
 }
 

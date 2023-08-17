@@ -161,7 +161,7 @@ async function drawingBubblesFromServer() {
     }
     // начальное положение
     translate(element, elements[id].x, elements[id].y)
-    // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
+    element.addEventListener("click", { handleEvent: clickBubbles, buttonId: buttonId, elemId:elemId, textIntoTheCircle:textIntoTheCircle });
   }
   console.log(elements)
   // console.log(Object.keys(elements).length)
@@ -170,17 +170,14 @@ async function drawingBubblesFromServer() {
 }
 
 function clickBubbles(event) {
-  console.log('чмошник')
-  console.log(this.link)
-  window.location.href = this.link
+  getElementId(this.elemId, this.buttonId, this.textIntoTheCircle)
+  let lesson_id = elementId['elid']
+  let title = elementId['lesson_id']
+  localStorage.setItem('lesson_id', lesson_id);
+  localStorage.setItem('title', title);
+  window.location.href = '../userLesson/userLesson.html';
+
 }
-/*------------------------------------*/
-
-
-
-
-
-
 function translate(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`
   // console.log(el,x,y)

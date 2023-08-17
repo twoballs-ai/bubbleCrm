@@ -220,64 +220,6 @@ async function drawingBubblesFromServer() {
   connect(elements)
 }
 
-// async function drawingBubblesAfterEdit() {
-//   // let num = Object.keys(elements).length
-
-//   for (items in elements) {
-//     searchDuplicate(items).then((res)=>{
-//       if (res===true) {
-//         console.log(items)
-
-//     textIntoTheCircle = elements[items]['label']
-//     console.log(textIntoTheCircle)
-//     // link = (await NodesID)[items]['link']
-//     positionX = elements[items]['x']
-//     positionY = elements[items]['y']
-//     style = elements[items]['style']
-//     buttonId = items
-//     // создание dom-элемента
-//     const element = document.createElement('div')
-//     // const textNode = document.createElement('p');
-//     element.addEventListener('mousedown', onMouseDown)
-//     const id = buttonId
-//     element.id = id
-//     // console.log(id)
-//     // element.setAttribute('href', link);
-//     element.className = style;
-//     element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
-//     document.body.prepend(element)
-//     // document.body.prepend(textNode)
-//     // console.log(element)
-//     // тут будут храниться и изменяться все его координаты
-
-//     console.log(element)
-//     elements[id] = {
-//       x: positionX,
-//       y: positionY,
-//       startX: 0,
-//       startY: 0,
-//       label: textIntoTheCircle,
-//       style: style
-//     }
-
-//     // начальное положение
-//     translate(element, elements[id].x, elements[id].y)
-//     // element.addEventListener("dblclick", { handleEvent: clickBubbles, link: link });
-//     element.addEventListener("contextmenu", { handleEvent: onContextBubbleMenu, buttonId: buttonId });
-//       }
-//       else{
-//         console.log('ошибка')
-//       }
-
-//     })
-
-//   }
-
-//   // console.log(num)
-//   console.log(elements)
-//   // connect(elements,subelements)
-//   connect(elements)
-// }
 
 function clickBubbles(event) {
   console.log('чмошник')
@@ -507,7 +449,7 @@ async function handleSubmit(event) {
       })
     }).then( (response) => { 
 console.log(response)});
-    // window.location.reload()
+    window.location.reload()
   }
 }
 

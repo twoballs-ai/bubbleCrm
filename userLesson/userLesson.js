@@ -25,8 +25,8 @@ function getData(){
   let jsonparse = JSON.parse(correctjson)
   console.log(jsonparse)
   const TextBody = document.createElement('div')
-  TextBody.className = 'TextBody'
-  TextBody.innerHTML = `<p class="redactClass">${jsonparse.text}</p>`;
+  TextBody.className = 'TextBody ms-5 ps-5'
+  TextBody.innerHTML = `<li class="list-group-item"><h3 class="redactClass">${jsonparse.text}</h3></li>`;
   document.body.appendChild(TextBody)
   }
 }

@@ -47,7 +47,7 @@ function handleClickFunction(event) {
     for(let items in outputData['blocks']){
       let type = outputData['blocks'][items]['type']
       let id = outputData['blocks'][items]['id']
-      let content = outputData['blocks'][items]['data']
+      let content = JSON.stringify(outputData['blocks'][items]['data'])
       console.log(content)
          fetch(url+ data['0']['id'], {
          method: 'POST',
@@ -72,7 +72,7 @@ function handleClickFunction(event) {
     console.log('Saving failed: ', error)
   });
 
-  window.location.href = '/index.html';
+  // window.location.href = '/index.html';
   
 }
 element.addEventListener('click', handleClickFunction)

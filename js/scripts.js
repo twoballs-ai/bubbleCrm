@@ -444,12 +444,12 @@ async function handleSubmit(event) {
       body: JSON.stringify({
           canvas:canvas_id,
           node:result.id,
-          post_blocks: []
+          metadata: []
 
       })
     }).then( (response) => { 
 console.log(response)});
-    window.location.reload()
+    // window.location.reload()
   }
 }
 

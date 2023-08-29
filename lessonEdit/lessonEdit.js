@@ -1,7 +1,11 @@
 // import EditorJS from '@editorjs/editorjs'; 
 const lesson_id = localStorage.getItem('lesson_id') 
 const lesson_title = localStorage.getItem('title') 
-
+const response = await fetch('http://127.0.0.1:8000/api/node-post-detail/'+lesson_id);
+const data = await response.json();
+let metadata = data['0']['metadata']
+  let jsonparse = JSON.parse(metadata)
+console.log(jsonparse)
 const editor = new EditorJS({ 
   /** 
    * Id of Element that should contain the Editor 
@@ -20,13 +24,15 @@ const editor = new EditorJS({
           }
         }
       },
+    raw: RawTool,
+    image: SimpleImage,
+    quote: Quote,
   }, 
+  data: jsonparse
   // autofocus: true
 })
 
-const response = await fetch('http://127.0.0.1:8000/api/node-post-detail/'+lesson_id);
-const data = await response.json();
-console.log(data)
+
 
 
 const inputTitle = ()=>{

@@ -76,6 +76,31 @@ function getData() {
         });
       }
       // console.log(data.style ==='ordered')
+    } else if (jsonparse['blocks'][item]['type'] === 'image') {
+      let url = document.createTextNode(data.url);
+      let alt = document.createTextNode(data.caption);
+      console.log(url)
+      let imgContent= document.createElement("img");
+      imgContent.className = 'img-thumbnail'
+      imgContent.setAttribute('src',url.textContent);
+      imgContent.setAttribute('alt', alt.textContent);
+      cardBody.appendChild(imgContent);
+    } else if (jsonparse['blocks'][item]['type'] === 'quote') {
+      let content = document.createTextNode(data.text);
+      let caption = document.createTextNode(data.caption);
+      let figureContent = document.createElement("figure");
+      figureContent.className = 'text-center'
+      let blockqueContent = document.createElement("blockquote");
+      blockqueContent.className = 'blockquote'
+      let figcaptionContent = document.createElement("figcaption");
+      figcaptionContent.className = 'blockquote-footer'
+      let p = document.createElement("p");
+      p.append(content);
+      figcaptionContent.appendChild(caption);
+      figureContent.appendChild(blockqueContent);
+      figureContent.appendChild(figcaptionContent);
+      blockqueContent.appendChild(p);
+      cardBody.appendChild(figureContent);
     }
   }
 }

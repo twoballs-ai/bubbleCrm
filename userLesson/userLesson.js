@@ -65,7 +65,7 @@ function getData() {
 
       } else if (data.style === 'unordered') {
         let ul = document.createElement('ul');
-        divContent.appendChild(ol);
+        divContent.appendChild(ul);
         cardBody.appendChild(divContent);
         // console.log(data.items)
         data.items.forEach((element) => {

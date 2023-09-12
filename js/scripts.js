@@ -297,6 +297,25 @@ function onContextAddNode(e) {
   contextAddNode.style.display = 'block';
 }
 
+function onContextBlockNode(e) {
+  // e.preventDefault()
+  console.log('block')
+  ClickAndBlock(e)
+  
+}
+function ClickAndBlock(e) {
+  e.preventDefault()
+      // myFirstEvent.addEventListener('click', function() {
+      //       alert('Дорогу осилит идущий');
+      //   })
+      window.addEventListener('click', showElemObjEvent);
+  function showElemObjEvent(event) {
+    console.log(event.type); // тип события
+
+}
+}
+
+
 function onContextEditNode(e) {
   e.preventDefault()
   let contextAddNode = document.querySelector('.edit-node-open');

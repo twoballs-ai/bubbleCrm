@@ -189,7 +189,7 @@ async function drawingBubblesFromServer() {
     // создание dom-элемента
     const element = document.createElement('div')
     // const textNode = document.createElement('p');
-    element.addEventListener('mousedown', onMouseDown)
+    // element.addEventListener('mousedown', onMouseDown)
     const id = buttonId
     element.id = id
     // console.log(id)
@@ -245,6 +245,20 @@ function onMouseDown(e) {
   }
 }
 
+function onContextMoveNodes(e) {
+  console.log(e)
+  document.body.addEventListener('mousedown', onMouseDown)
+  // element.addEventListener('mousedown', onMouseDown)
+  // context.clearRect(0, 0, width, height)
+  // const x = elements[current.id].x = e.x - elements[current.id].startX
+  // const y = elements[current.id].y = e.y - elements[current.id].startY
+  // // console.log(current)
+  // translate(current, x, y)
+  // connect(elements)
+  // // console.log(elements);
+  // // console.log('mouse onMove');
+}
+
 function onMouseMove(e) {
   context.clearRect(0, 0, width, height)
   const x = elements[current.id].x = e.x - elements[current.id].startX
@@ -297,23 +311,23 @@ function onContextAddNode(e) {
   contextAddNode.style.display = 'block';
 }
 
-function onContextBlockNode(e) {
-  // e.preventDefault()
-  console.log('block')
-  ClickAndBlock(e)
+// function onContextBlockNode(e) {
+//   // e.preventDefault()
+//   console.log('block')
+//   ClickAndBlock(e)
   
-}
-function ClickAndBlock(e) {
-  e.preventDefault()
-      // myFirstEvent.addEventListener('click', function() {
-      //       alert('Дорогу осилит идущий');
-      //   })
-      window.addEventListener('click', showElemObjEvent);
-  function showElemObjEvent(event) {
-    console.log(event.type); // тип события
+// }
+// function ClickAndBlock(e) {
+//   e.preventDefault()
+//       // myFirstEvent.addEventListener('click', function() {
+//       //       alert('Дорогу осилит идущий');
+//       //   })
+//       window.addEventListener('click', showElemObjEvent);
+//   function showElemObjEvent(event) {
+//     console.log(event); // тип события
 
-}
-}
+// }
+// }
 
 
 function onContextEditNode(e) {
@@ -468,7 +482,7 @@ async function handleSubmit(event) {
       })
     }).then( (response) => { 
 console.log(response)});
-    // window.location.reload()
+    window.location.reload()
   }
 }
 
@@ -492,6 +506,7 @@ async function handleEditNodeSubmit(event) {
   const value = Object.fromEntries(data.entries());
   const response = await editNode(value)
   console.log(event);
+  window.location.reload()
 }
 
 const formEditNode = document.getElementById('editNode');

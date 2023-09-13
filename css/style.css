@@ -344,3 +344,29 @@ top: 35%;
   position: relative;
   z-index: 99999;
 }
+
+.menu{
+  width:200px;
+  height:300px;
+  position: absolute;
+  top:100px;
+  border-radius: 10px 10px;
+  background: rgba(128, 128, 128, 0.253);
+}
+.move-nodes{
+  display: inline; 
+  
+  
+}
+.add-nodes{
+  display: inline; 
+  
+  
+}
+.connect-nodes{
+  display: inline; 
+}
+
+.lock-nodes{
+  display: inline; 
+}

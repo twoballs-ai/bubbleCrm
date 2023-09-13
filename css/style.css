@@ -370,3 +370,12 @@ top: 35%;
 .lock-nodes{
   display: inline; 
 }
+.open-close-menu{
+  position:absolute;
+  left:180px;
+  top:135px;
+}
+
+.grip{
+  fill:#ffffff;
+}

@@ -194,7 +194,7 @@ async function drawingBubblesFromServer() {
     element.id = id
     // console.log(id)
     // element.setAttribute('href', link);
-    element.className = style;
+    element.className = style+" "+"circles";
     element.innerHTML = `<div class="textParent"><p class="textIntoTheCircle">${textIntoTheCircle}</p><br><p class="textIntoTheCircle">id:${buttonId}</p></div>`;
     document.body.prepend(element)
     // document.body.prepend(textNode)
@@ -341,11 +341,12 @@ function onContextEditNode(e) {
 
 function onContextAddEdge(e) {
   e.preventDefault()
-  let contextAddNode = document.querySelector('.add-edge-open');
-  contextAddNode.style.left = e.clientX + 'px';
-  contextAddNode.style.top = e.clientY + 'px';
-  contextAddNode.style.display = 'block';
-  console.log('edge')
+  
+  handleAddEdgeSubmit(e)
+}
+function onContextPanelAddEdge(e) {
+  e.preventDefault()
+  handlePanelAddEdgeSubmit(e)
 }
 
 // функция вызова меню удаления узла.
@@ -512,30 +513,99 @@ async function handleEditNodeSubmit(event) {
 const formEditNode = document.getElementById('editNode');
 formEditNode.addEventListener('submit', handleEditNodeSubmit);
 //////////////
-// добавление узлов
 async function handleAddEdgeSubmit(event) {
   event.preventDefault();
-  const data = new FormData(event.target);
+  const data = new Map();
   let canvas_id = await canvas_page();
-  data.append('canvas', canvas_id);
-  const value = Object.fromEntries(data.entries());
-  source = elements[value['source']]['elemId']
-  target = elements[value['target']]['elemId']
-  data.set('source', source);
-  data.set('target', target);
-  const edit = Object.fromEntries(data.entries());
-  const response = await addEdge(edit)
-  if (response.status === 200 || response.status === 201) {
-    let result = await response.json();
-    console.log(result);
-    // console.log('.[[ee')
-    window.location.reload()
-  }
+  data.set('canvas', canvas_id);
+  let source = elementId['elid']
+  console.log('dsdsd')
+  let circles = document.querySelectorAll(".circles")
+  circles.forEach((element) =>  element.addEventListener('click', async function (e) {
+    let target = elements[this.id]['elemId']
+    data.set('source', source);
+    data.set('target', target);
+    const edit = Object.fromEntries(data.entries());
+    const response = await addEdge(edit)
+    if (response.status === 200 || response.status === 201) {
+      let result = await response.json();
+      console.log(result);
+      // console.log('.[[ee')
+      window.location.reload()
+    }
+  }));
 }
+async function handlePanelAddEdgeSubmit(event) {
+  event.preventDefault();
+  const data = new Map();
+  let canvas_id = await canvas_page();
+  data.set('canvas', canvas_id);
+  // let source = elementId['elid']
+  console.log('dsdsd')
+  let circles = document.querySelectorAll(".circles")
+  let array = []
+  circles.forEach((element) =>  element.addEventListener('click', async function (e) {
+    array.push(elements[this.id]['elemId'])
+    console.log(this)
+    console.log(array)
+    if(array.length===2){
+      console.log('pipiska')
+      let source = array[0]
+      let target = array[1]
+    data.set('source', source);
+    data.set('target', target);
+    const edit = Object.fromEntries(data.entries());
+    const response = await addEdge(edit)
+    if (response.status === 200 || response.status === 201) {
+      let result = await response.json();
+      console.log(result);
+      // console.log('.[[ee')
+      window.location.reload()
+    }
+    }
+  }))
+  // circles.forEach((element) =>  element.addEventListener('click', async function (e) {
+  //   let source =
+  //   let source = elements[this.id]['elemId']
+  //   // let target = elements[this.id]['elemId']
+  //   console.log(source)
+  //   // console.log(target)
+  //   // data.set('source', source);
+  //   // data.set('target', target);
+  //   // const edit = Object.fromEntries(data.entries());
+  //   // const response = await addEdge(edit)
+  //   // if (response.status === 200 || response.status === 201) {
+  //   //   let result = await response.json();
+  //   //   console.log(result);
+  //   //   // console.log('.[[ee')
+  //   //   window.location.reload()
+  //   // }
+  // }));
+}
+// // добавление узлов
+// async function handleAddEdgeSubmit(event) {
+//   event.preventDefault();
+//   const data = new FormData(event.target);
+//   let canvas_id = await canvas_page();
+//   data.append('canvas', canvas_id);
+//   const value = Object.fromEntries(data.entries());
+//   source = elements[value['source']]['elemId']
+//   target = elements[value['target']]['elemId']
+//   data.set('source', source);
+//   data.set('target', target);
+//   const edit = Object.fromEntries(data.entries());
+//   const response = await addEdge(edit)
+//   if (response.status === 200 || response.status === 201) {
+//     let result = await response.json();
+//     console.log(result);
+//     // console.log('.[[ee')
+//     window.location.reload()
+//   }
+// }
 
-const formAddEdge = document.getElementById('addEdge');
-formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
-/////////////
+// const formAddEdge = document.getElementById('addEdge');
+// formAddEdge.addEventListener('submit', handleAddEdgeSubmit);
+// /////////////
 /////////////
 async function handleDeleteEdgeSubmit(event) {
   event.preventDefault();

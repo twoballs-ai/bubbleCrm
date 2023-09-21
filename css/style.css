@@ -379,3 +379,10 @@ top: 35%;
 .grip{
   fill:#ffffff;
 }
+
+svg{
+  fill:#757575
+}
+svg:hover{
+  fill:#2cffc0
+}
